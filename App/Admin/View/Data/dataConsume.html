@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/Common/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/Common/easyui/css/admin.css">
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/Common/easyui/themes/icon.css">
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/jquery.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/easyloader.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/common.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/extends.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Admin/js/time.js"></script>
+</head>
+<body style="padding-top: 0">
+    <p style="background-color: #E1A25F;padding: 20px;border-radius: 12px;width: 50%;min-width:800px;color: #FFFFFF;">房卡消耗合计: <span style="font-size: 20px;margin-left: 6px;" id="total"></span></p>
+    <div style="min-height: 700px;max-width: 53%;min-width:800px;">
+        <table id="dg" class="easyui-datagrid" title="房卡消耗" toolbar="#tb"></table>
+    </div>
+    <div id="tb">
+        玩家ID:&emsp;<input class="easyui-textbox" id="search" style="width:160px">
+        <a href="#" class="easyui-linkbutton" iconCls="icon-search" onclick="doSearch()">搜索</a>
+        开始时间: <input class="easyui-datetimebox" data-ptions="showSeconds:false"  name="start_time" id="start_time"  style="width:140px">
+        结束时间: <input class="easyui-datetimebox" name="end_time" id="end_time"  style="width:140px">
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" onclick="tdoSearch()">搜索</a>
+    </div>
+    <script type="text/javascript">
+        $(function () {
+            getTime($("#end_time"));
+            getOldTime($("#start_time"));
+            $("#dg").datagrid({
+                loadMsg : '数据加载中……',
+                url:"{:U('Admin/Data/dataConsume')}",
+                pagination:true,
+                singleSelect:true,
+                pageSize: 25, //页大小
+                pageList: [25,50,75,100],
+                pagePosition:'bottom',
+                autoRowHeight:true,
+                fit:true,
+                fitColumn:true,
+                striped: true,
+                columns:[[
+                    {field:'ID',hidden:true},
+                    {field:'user_id',width:'50%',align:'center',title:'玩家ID'},
+                    {field:'total',width:'50%',align:'center',title:'消耗合计',formatter:
+                        function (value) {
+                            return Math.abs(value)
+                        }
+                    }
+                ]],
+                onLoadSuccess:function (data) {
+                    $("#total").html(Math.abs(data['num']));
+                }
+            });
+        });
+        function doSearch() {
+            var search = $.trim($("#search").val());
+            var start_time = $("#start_time").datebox("getValue");
+            var end_time = $("#end_time").datebox("getValue");
+            if(search == '') {
+                window.location.href="{:U('Admin/Data/dataConsume')}";
+            }else{
+                if(start_time == '' || end_time == '') {
+                    $("#dg").datagrid({
+                        loadMsg : '数据加载中……',
+                        url:"{:U('Admin/Data/dataConsume')}",
+                        queryParams:{
+                            search:search
+                        },
+                        pagination:true,
+                        singleSelect:true,
+                        pageSize: 25, //页大小
+                        pageList: [25,50,75,100],
+                        pagePosition:'bottom',
+                        autoRowHeight:true,
+                        fit:true,
+                        fitColumn:true,
+                        striped: true,
+                        columns:[[
+                            {field:'ID',hidden:true},
+                            {field:'num',hidden:true},
+                            {field:'user_id',width:'30%',align:'center',title:'玩家ID'},
+                            {field:'card_change',width:'30%',align:'center',title:'消耗数量',formatter:
+                                function (value) {
+                                    return Math.abs(value)
+                                }
+                            },
+                            {field:'add_time',width:'30%',align:'center',title:'消耗时间',formatter:
+                                function (value) {
+                                    value = getLocalTime(value);
+                                    return value;
+                                }
+                            },
+                        ]],
+                        onLoadSuccess:function (data) {
+                            $("#total").html(Math.abs(data['num']));
+                        }
+                    });
+                }else{
+                    $("#dg").datagrid({
+                        loadMsg : '数据加载中……',
+                        url:"{:U('Admin/Data/dataConsume')}",
+                        queryParams:{
+                            search:search,
+                            start_time: new Date(start_time).getTime()/1000,
+                            end_time: new Date(end_time).getTime()/1000
+                        },
+                        pagination:true,
+                        singleSelect:true,
+                        pageSize: 25, //页大小
+                        pageList: [25,50,75,100],
+                        pagePosition:'bottom',
+                        autoRowHeight:true,
+                        fit:true,
+                        fitColumn:true,
+                        striped: true,
+                        columns:[[
+                            {field:'ID',hidden:true},
+                            {field:'num',hidden:true},
+                            {field:'user_id',width:'30%',align:'center',title:'玩家ID'},
+                            {field:'card_change',width:'30%',align:'center',title:'消耗数量',formatter:
+                                function (value) {
+                                    return Math.abs(value)
+                                }
+                            },
+                            {field:'add_time',width:'30%',align:'center',title:'消耗时间',formatter:
+                                function (value) {
+                                    value = getLocalTime(value);
+                                    return value;
+                                }
+                            },
+                        ]],
+                        onLoadSuccess:function (data) {
+                            $("#total").html(Math.abs(data['num']));
+                        }
+                    });
+                }
+            }
+        }
+
+        function tdoSearch() {
+            var search = $.trim($("#search").val());
+            var start_time = $("#start_time").datebox("getValue");
+            var end_time = $("#end_time").datebox("getValue");
+            if(search == '') {
+                if(start_time == '' || end_time == '') {
+                    $.messager.alert('温馨提示！','开始时间和结束时间是必填项','error');
+                    return false;
+                }else{
+                    if (parseInt(new Date(start_time).getTime()) > parseInt(new Date(end_time).getTime())) {
+                        $.messager.alert('温馨提示！', '请输入正确的时间段!', 'error');
+                        return false;
+                    }else{
+                        $("#dg").datagrid({
+                            loadMsg : '数据加载中……',
+                            url:"{:U('Admin/Data/dataConsume')}",
+                            queryParams:{
+                                start_time: new Date(start_time).getTime()/1000,
+                                end_time: new Date(end_time).getTime()/1000
+                            },
+                            pagination:true,
+                            autoRowHeight:true,
+                            singleSelect:true,
+                            pageSize: 25, //页大小
+                            pageList: [25,50,75,100],
+                            pagePosition:'bottom',
+                            fit:true,
+                            fitColumn:true,
+                            striped: true,
+                            columns:[[
+                                {field:'ID',hidden:true},
+                                {field:'num',hidden:true},
+                                {field:'user_id',width:'50%',align:'center',title:'玩家ID'},
+                                {field:'total',width:'50%',align:'center',title:'消耗合计',formatter:
+                                    function (value) {
+                                        return Math.abs(value)
+                                    }
+                                }
+                            ]],
+                            onLoadSuccess:function (data) {
+                                $("#total").html(Math.abs(data['num']));
+                            }
+                        });
+                    }
+                }
+            }else{
+                $("#dg").datagrid({
+                    loadMsg : '数据加载中……',
+                    url:"{:U('Admin/Data/dataConsume')}",
+                    queryParams:{
+                        search :search,
+                        start_time: new Date(start_time).getTime()/1000,
+                        end_time: new Date(end_time).getTime()/1000
+                    },
+                    pagination:true,
+                    autoRowHeight:true,
+                    singleSelect:true,
+                    pageSize: 25, //页大小
+                    pageList: [25,50,75,100],
+                    pagePosition:'bottom',
+                    fit:true,
+                    fitColumn:true,
+                    striped: true,
+                    columns:[[
+                        {field:'ID',hidden:true},
+                        {field:'num',hidden:true},
+                        {field:'user_id',width:'33%',align:'center',title:'茶馆ID'},
+                        {field:'card_change',width:'33%',align:'center',title:'消耗数量',formatter:
+                            function (value) {
+                                return Math.abs(value)
+                            }
+                        },
+                        {field:'add_time',width:'33%',align:'center',title:'消耗时间',formatter:
+                            function (value) {
+                                value = getLocalTime(value);
+                                return value;
+                            }
+                        },
+                    ]],
+                    onLoadSuccess:function (data) {
+                        $("#total").html(Math.abs(data['num']));
+                    }
+                });
+            }
+        }
+        function getTime(obj) {
+            var curr_time=new Date();
+            var strDate=curr_time.getFullYear()+"-";
+            strDate +=curr_time.getMonth()+1+"-";
+            strDate +=curr_time.getDate()+"-";
+            strDate +=" "+curr_time.getHours()+":";
+            strDate +=curr_time.getMinutes()+":";
+            $(obj).val(strDate);
+        }
+        function getOldTime(obj) {
+            var time = Date.parse(new Date())/1000-259200;
+            $(obj).val(getLocalTime(time));
+        }
+    </script>
+</body>
+</html>

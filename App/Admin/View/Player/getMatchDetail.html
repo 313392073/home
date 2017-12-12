@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/Common/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/Common/easyui/css/admin.css">
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/Common/easyui/themes/icon.css">
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/jquery.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/easyloader.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/common.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/extends.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Admin/js/time.js"></script>
+</head>
+<body>
+<p><a href="{:U('Admin/Player/playerMatch')}" class="easyui-linkbutton" >返回</a></p>
+<div style="width: 50%;max-width: 800px; border: 1px solid #ccc; border-radius: 12px;box-shadow: 2px 2px 5px #ddd;padding: 20px 50px">
+       <p style="background-color: #caa45b;padding: 20px;margin-left: 10px;border-radius: 12px;text-align: center">比赛时间：<span> {$time|date='Y-m-d H:i:s',###}</span></p>
+       <table class="easyui-datagrid" style="width:100%;height:250px"
+              data-options="fitColumns:true,singleSelect:true">
+           <thead>
+               <tr>
+                   <th data-options="field:'uid',width:'25%',align:'center'">玩家ID</th>
+                   <th data-options="field:'name',width:'25%',align:'center'">姓名</th>
+                   <th data-options="field:'lastRank',width:'25%',align:'right',align:'center'">排名</th>
+                   <th data-options="field:'lastScore',width:'25%',align:'right',align:'center'">得分</th>
+               </tr>
+           </thead>
+           <tbody>
+            <foreach name="info" item="v">
+                <tr>
+                    <td>{$v.uid}</td>
+                    <td>{$v.name}</td>
+                    <td>{$v.lastRank}</td>
+                    <td>{$v.lastScore}</td>
+                </tr>
+            </foreach>
+           </tbody>
+       </table>
+   </div>
+</body>
+</html>

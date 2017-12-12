@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/Common/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/Common/easyui/css/admin.css">
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/Common/easyui/themes/icon.css">
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/jquery.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/easyloader.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/common.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/extends.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Admin/js/time.js"></script>
+</head>
+<body>
+    <table id="dg" class="easyui-datagrid" title="比赛日志列表" toolbar="#tb"></table>
+    <div id="tb">
+        选择时间:  <input type="text" name="timed" class="easyui-datebox" id="timed">
+        <a href="#" class="easyui-linkbutton" iconCls="icon-search" onclick="doSearch()">查询</a>
+    </div>
+    <script type="text/javascript">
+        $(function () {
+            getTime($("#timed"));
+            $("#dg").datagrid({
+                loadMsg : '数据加载中……',
+                url:"{:U('Admin/Player/playerMatch')}",
+                pagination:true,
+                singleSelect:true,
+                pageSize: 25, //页大小
+                pageList: [25,50,75,100],
+                pagePosition:'bottom',
+                fit:true,
+                fitColumn:true,
+                striped: true,
+                idField:'id',
+                columns:[[
+                    {field:'add_time',width:180,align:'center',title:'比赛时间',formatter:
+                        function (value) {
+                            value = getLocalTime(value);
+                            return value;
+                        }
+                    },
+                    {field:'id',width:100,align:'center',title:'比赛详情',formatter:
+                        function (value) {
+                            return '<a href="javascript:void(0)" data-game="'+value+'" onclick="getMatchDetail(this)">查看</a>';
+                        }
+                    },
+                ]]
+            });
+        })
+
+        function doSearch() {
+            var timed = $("#timed").datebox('getValue');
+            if(timed == '') {
+                $.messager.alert('温馨提示！','请输入时间!','error');
+                return false;
+            }else {
+                $('#dg').datagrid('load',{
+                    timed: timed,
+                });
+            }
+        }
+        function getTime(obj) {
+            var curr_time=new Date();
+            var strDate=curr_time.getFullYear()+"-";
+            strDate +=curr_time.getMonth()+1+"-";
+            strDate +=curr_time.getDate()+"-";
+            $(obj).val(strDate);
+        }
+        
+        function getMatchDetail(This) {
+            var Id = $.trim($(This).data('game'));
+            $(This).attr('href',"{:U('Admin/Player/getMatchDetail')}?Id="+Id);
+        }
+    </script>
+</body>
+</html>

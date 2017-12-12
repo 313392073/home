@@ -1,0 +1,77 @@
+@size:100%;
+.box{
+  height: @size;
+  max-width: 640px;
+  margin: 0 auto;
+  font-size: 1.6rem;
+  position: relative;
+  padding: 0 15px 20px;
+  .time{
+    color: #8c8c8c;
+  }
+  .desc{
+    margin: 20px auto;
+    border: 2px solid rgb(55, 74, 174);
+    box-shadow: 0 0 5px rgb(55, 74, 174);
+    border-radius: 8px;
+    color: red;
+    font-weight: bold;
+    padding: 10px;
+  }
+  .pic1{
+    width: @size;
+    text-align: center;
+    img{
+      width: 96%;
+      max-width: 500px;
+      margin: 10px auto 20px;
+    }
+  }
+  p{
+    line-height: 26px;
+  }
+  .bgtext{
+    text-align: center;
+    span{
+      background-color: rgb(255, 251, 0);
+      color: #000000;
+      font-weight: bold;
+      font-size: 20px;
+    }
+  }
+  .line{
+    &>div{
+      border-bottom: 1px solid red;
+      margin: 0 auto 3px;
+    }
+  }
+  .sec{
+    margin: 10px auto;
+    h4{
+      border-left: 5px rgb(55, 74, 174) solid;
+      text-indent: 15px;
+      font-weight: bold;
+    }
+    p{
+      margin: 25px auto;
+    }
+    img{
+      width: 96%;
+      max-width: 500px;
+      margin: 10px auto 20px;
+    }
+  }
+  .contact{
+    text-align: center;
+    padding-bottom: 20px;
+    div{
+      text-align: center;
+      color: rgb(122, 79, 214);
+      font-weight: bold;
+    }
+    h4{
+      font-weight: bold;
+      color: red;
+    }
+  }
+}

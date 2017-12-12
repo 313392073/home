@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/Common/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/Common/easyui/css/admin.css">
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/Common/easyui/themes/icon.css">
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/jquery.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/easyloader.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/common.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/extends.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Admin/js/time.js"></script>
+</head>
+<body>
+    <div>
+        <div style="margin-bottom:10px">
+            <p>初始房卡：</p>
+            <input class="easyui-textbox" style="width:400px;height:30px" id="card" value="{$card}">
+        </div>
+        <div style="margin-bottom:10px">
+            <p>初始金币：</p>
+            <input class="easyui-textbox" style="width:400px;height:30px" id="coin" value="{$coin}">
+        </div>
+        <p style="width:400px;text-align: center"><a href="javascript:void(0)" class="easyui-linkbutton" style="padding: 3px 8px;" id="sbtn">提交</a></p>
+    </div>
+    <script type="text/javascript">
+        $("#sbtn").on("click",function () {
+            var card = $.trim($("#card").val());
+            var coin = $.trim($("#coin").val());
+            if(card == '' || coin == '') {
+                if(card == '') {
+                    $.messager.alert('温馨提示！','请输入初始的房卡数，最少是0!','warning',setTimeout(function () {
+                        window.location.href="{:U('Admin/Game/gameInitial')}"
+                    },500));
+                }
+                if(coin == '') {
+                    $.messager.alert('温馨提示！','请输入初始的金币数，最少是0!','warning',setTimeout(function () {
+                        window.location.href="{:U('Admin/Game/gameInitial')}"
+                    },500));
+                }
+            }else{
+                var reg = /^\+?[0-9]\d*$/;
+                var ftag = reg.test(card);
+                var ctag = reg.test(coin);
+                if(!ftag) {
+                    $.messager.alert('温馨提示！','请输入合法的房卡数量！','warning');
+                    return false;
+                }
+                if(!ctag) {
+                    $.messager.alert('温馨提示！','请输入合法的金币数量！','warning');
+                    return false;
+                }
+
+                $.ajax({
+                    type:'post',
+                    url:"{:U('Admin/Game/setGmInitial')}",
+                    dataType:'json',
+                    data:{'card':card,'coin':coin},
+                    success: function (data) {
+                        if(data == 'success') {
+                            $.messager.alert('温馨提示！','设置成功!','info',setTimeout(function () {
+                                window.location.href="{:U('Admin/Game/gameInitial')}";
+                            },500))
+                        }else{
+                            $.messager.alert('温馨提示！','网络错误，设置失败!','error',setTimeout(function () {
+                                window.location.href="{:U('Admin/Game/gameInitial')}";
+                            },500))
+                        }
+                    }
+                })
+            }
+        })
+
+    </script>
+</body>
+</html>

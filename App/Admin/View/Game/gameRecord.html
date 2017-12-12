@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/Common/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/Common/easyui/css/admin.css">
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/Common/easyui/themes/icon.css">
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/jquery.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/easyloader.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/common.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/extends.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Admin/js/time.js"></script>
+</head>
+<body>
+    <table id="dg" class="easyui-datagrid" title="牌局记录" toolbar="#tb"></table>
+    <div id="tb">
+        房间号: <input class="easyui-textbox" id="search" style="width:160px">
+        <a href="#" class="easyui-linkbutton" iconCls="icon-search" onclick="doSearch()">查询</a>
+    </div>
+    <script type="text/javascript">
+        $(function () {
+            $("#dg").datagrid({
+                loadMsg : '数据加载中……',
+                url:"{:U('Admin/Game/gameRecord')}",
+                pagination:true,
+                singleSelect:true,
+                pageSize: 25, //页大小
+                pageList: [25,50,75,100],
+                pagePosition:'bottom',
+                fit:true,
+                fitColumn:true,
+                striped: true,
+                idField:'id',
+                columns:[[
+                    {field:'room_id',width:'15%',align:'center',title:'房间号',formatter:
+                        function (value,row) {
+                            try {
+                                JSON.parse(row.info);
+                                return value;
+                            }catch (e) {
+
+                            }
+                        }
+                    },
+                    {field:'info',width:'20%',align:'center',title:'创建者',formatter:
+                        function (value) {
+                            try{
+                                return JSON.parse(value)['creator']
+                            }catch (e){
+
+                            }
+
+                        }
+                    },
+                    {field:'add_time',width:'20%',align:'center',title:'创建时间',formatter:
+                        function (value) {
+                            value = getLocalTime(value);
+                            return value;
+                        }
+                    },
+                    {field:'id',width:100,align:'center',title:'牌局详情',formatter:
+                        function (value) {
+                            return '<a href="javascript:void(0)" data-game="'+value+'" onclick="getGameDetail(this)">查看</a>';
+                        }
+                    },
+                ]]
+            })
+        });
+        
+        function getGameDetail(This) {
+            var Id = $.trim($(This).data('game'));
+            $(This).attr('href',"{:U('Admin/Game/getGameDetail')}?Id="+Id);
+        }
+        
+        function doSearch() {
+            var search = $.trim($("#search").val());
+            $("#dg").datagrid('load',{
+                search:search
+            })
+        }
+    </script>
+</body>
+</html>

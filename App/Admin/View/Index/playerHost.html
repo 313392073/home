@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>百亿云商务平台</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="description" content="百亿云登录系统">
+    <meta name="keywords" content="百亿云登录系统">
+    <script src="__PUBLIC__/App/js/jquery.js"></script>
+    <link rel="stylesheet" href="__PUBLIC__/Admin/css/common.css">
+    <link rel="stylesheet" href="__PUBLIC__/Admin/css/bootstrap.min.css">
+    <link rel="stylesheet" href="__PUBLIC__/Admin/css/Font/css/font-awesome.min.css">
+    <link rel="stylesheet" href="__PUBLIC__/Admin/css/pages.css">
+    <link rel="stylesheet" href="__PUBLIC__/Admin/css/agentList.css">
+    <script src="__PUBLIC__/Admin/js/bootstrap.min.js"></script>
+    <script src="__PUBLIC__/Admin/js/index.js"></script>
+    <script src="__PUBLIC__/Admin/js/pages.js"></script>
+    <script src="__PUBLIC__/Admin/js/time.js"></script>
+    <script src="__PUBLIC__/Admin/js/common.js"></script>
+</head>
+<body>
+    <div class="box">
+        <div style="width: 50%;margin: 10px 0">
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="请输入游戏ID" id="search">
+                <span class="input-group-btn">
+                    <button class="btn btn-primary" style="line-height: 20px" type="button" id="cbtn">验证</button>
+                </span>
+            </div>
+        </div>
+        <div class="info">
+            <div class="row">
+                <div class="col-md-6 col-offset-2">
+                    <div class="input-group">
+                        <span class="input-group-addon">代理 ID&nbsp;&nbsp;</span>
+                        <input type="text" class="form-control" name="agent_id" id="agent_id" value="{$agent_id}" disabled="true">
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">登录账号</span>
+                        <input type="text" class="form-control" placeholder="请输入登录账号" name="login_id" id="login_id">
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">茶馆名称</span>
+                        <input type="text" class="form-control" placeholder="请输入茶馆名称" name="tea_name" id="tea_name">
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">茶馆区域</span>
+                        <input type="text" class="form-control" placeholder="请输入茶馆区域" name="city" id="city">
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">茶馆公告</span>
+                        <input type="text" class="form-control" placeholder="请输入茶馆公告" name="notice" id="notice">
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">姓名&emsp;&emsp;</span>
+                        <input type="text" class="form-control" name="named" placeholder="请输入姓名" id="named">
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">手机号码</span>
+                        <input type="text" class="form-control" name="tel" placeholder="请输入手机号码" id="tel">
+                    </div>
+                    <div style="text-align: center;margin-top: 20px;"><button class="btn btn-primary" id="sbtn">保存</button></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $("#cbtn").on("click", function () {
+            var search = $.trim($("#search").val());
+            var regs = /^\d{6}$/;
+            var tags = regs.test(search);
+            if(search == '') {
+                alert('请输入游戏ID');
+                return false;
+            }else if(!tags) {
+                alert('请输入合法的游戏ID');
+                return false;
+            }else{
+               $.ajax({
+                   type:'get',
+                   url:"{:U('Admin/Agent/getPlayerInfo')}?search="+search,
+                   dataType:'json',
+                    success: function (data) {
+                        console.log(data);
+                        if(data == 'isAgent') {
+                            alert("该游戏ID已经是代理了");
+                        }else if(data == 'error'){
+                            alert("网络出错，创建失败！");
+                        }else if(data == 'noSource'){
+                            alert("网络出错，验证失败！");
+                        }else{
+                            $("#agent_id").val(data);
+                            alert('匹配成功');
+                        }
+                    }
+               })
+            }
+        })
+        $("#sbtn").on("click", function () {
+            var search = $.trim($("#search").val());
+            var agent_id = $.trim($("#agent_id").val());
+            var login_id = $.trim($("#login_id").val());
+            var tea_name = $.trim($("#tea_name").val());
+            var city = $.trim($("#city").val());
+            var notice = $.trim($("#notice").val());
+            var named = $.trim($("#named").val());
+            var tel = $.trim($("#tel").val());
+            if(agent_id == '') {
+                alert('请先验证游戏ID');
+                $("#search").focus();
+            }else{
+                if(login_id == '' || tea_name == '' || city == '' || notice == '' || named == '' || tel == '') {
+                    if(login_id == '') {
+                        alert('登录账号是必填项');
+                        return false;
+                    }
+                    if(tea_name == '') {
+                        alert("茶馆名称是必填项");
+                        return false;
+                    }
+                    if(city == '') {
+                        alert('茶馆区域是必填项');
+                        return false;
+                    }
+                    if(notice == '') {
+                        alert('茶馆公告是必填项');
+                        return false;
+                    }
+                    if(named == '') {
+                        alert("姓名是必填项");
+                        return false;
+                    }
+                    if(tel == '') {
+                        alert("手机号是必填项");
+                        return false;
+                    }
+                }else{
+                    var regs = /^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]{6,10}$/;
+                    var tag = regs.test(login_id);
+                    if(!tag) {
+                        alert("账号格式为6-10位字母拼音+数字的组合");
+                        return false;
+                    }
+                    var sreg = /^1[3|4|5|7|8][0-9]{9}$/;
+                    var stag = sreg.test(tel);
+                    if(!stag) {
+                       alert("手机号码格式不对");
+                        return false;
+                    }
+                    $.ajax({
+                        type:'post',
+                        url:"{:U('Admin/Agent/saveInfo')}",
+                        dataType:'json',
+                        data:{"search":"search","agent_id":agent_id,"login_id":login_id,"tea_name":tea_name,"city":city,"notice":notice,"named":named,"tel":tel},
+                        success: function (data) {
+                            if(data == 'success') {
+                                alert("保存成功");
+                            }else{
+                                alert("保存失败");
+                            }
+                        }
+                    })
+                }
+            }
+        })
+    </script>
+</body>
+</html>

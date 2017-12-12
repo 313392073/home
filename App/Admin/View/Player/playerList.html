@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/Common/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/Common/easyui/css/admin.css">
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/Common/easyui/themes/icon.css">
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/jquery.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/easyloader.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/common.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/extends.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Admin/js/time.js"></script>
+    <style type="text/css">
+        .easyui-input{
+            line-height: 18px;
+            border: 1px solid #95B8E7;
+            border-radius: 5px;
+            padding: 3px 2px;
+            white-space: normal;
+            vertical-align: top;
+            outline-style: none
+        }
+    </style>
+</head>
+<body>
+    <table id="dg" class="easyui-datagrid" title="玩家列表" toolbar="#tb"></table>
+    <div id="tb">
+        玩家ID: <input class="easyui-textbox" id="search" style="width:120px">
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" onclick="doSearch()">提升搜索</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-group_key" onclick="doCheck()">提升验证</a>&emsp;&emsp;
+        开始时间: <input class="easyui-datetimebox" data-ptions="showSeconds:false"  name="start_time" id="start_time"  style="width:140px">
+        结束时间: <input class="easyui-datetimebox" name="end_time" id="end_time"  style="width:140px">
+        <a href="javascript:void(0)" class="easyui-linkbutton" onclick="playerExport(this)" plain="true" >数据导出</a>
+    </div>
+
+    <div id="dlgEdit" class="easyui-dialog" style="padding:10px 20px;width:400px;"
+         buttons="#dlgEdit-buttons" closed="true" modal="true">
+        <form id="fmEdit" method="post" novalidate>
+            <div class="fitem">
+                <input type="hidden" id="refer">
+                <label>匹配的玩家ID:</label>
+                <input name="game_id" id="game_id" class="easyui-input" data-options="height:30" disabled="disabled" >
+            </div>
+            <div class="fitem">
+                <label>登录账号:</label>
+                <input name="login_id" id="login_id" class="easyui-input" data-options="height:30" required="true">
+            </div>
+            <div class="fitem">
+                <label>姓名:</label>
+                <input name="named" id="named" type="text" class="easyui-input" data-options="height:30">
+            </div>
+            <div class="fitem">
+                <label>电话号码:</label>
+                <input name="tel" id="tel" class="easyui-input" data-options="height:30">
+            </div>
+            <div class="fitem">
+                <label>茶馆名称:</label>
+                <input name="tea_name" id="tea_name" class="easyui-input"  data-options="height:30" />
+            </div>
+            <div class="fitem">
+                <label>茶馆区域:</label>
+                <input name="city" id="city" class="easyui-input" data-options="height:30" />
+            </div>
+            <div class="fitem">
+                <label>茶馆公告:</label>
+                <input name="notice" id="notice" class="easyui-input" data-options="height:30" />
+            </div>
+        </form>
+        <div id="dlgEdit-buttons">
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" onclick="saveUser()" style="width:90px">保存</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlgEdit').dialog('close')" style="width:90px">取消</a>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $(function () {
+            var ddd = window.frames.frameElement;
+            window.frames.frameElement.setAttribute('name','iframed');
+            getTime($("#end_time"));
+            getOldTime($("#start_time"));
+            $("#dg").datagrid({
+                loadMsg : '数据加载中……',
+                url:"{:U('Admin/Player/playerList')}",
+                pagination:true,
+                singleSelect:true,
+                pageSize: 25, //页大小
+                pageList: [25,50,75,20],
+                pagePosition:'bottom',
+                fit:true,
+                fitColumn:true,
+                striped: true,
+                idField:'_id',
+                columns:[[
+                    {field:'_id',width:100,align:'center',title:'游戏ID'},
+                    {field:'name',width:100,align:'center',title:'微信昵称'},
+//                    {field:'coin',editor:'text',width:60,align:'center',title:'剩余房卡'} ,
+                    {field:'card',width:120,align:'center',title:'剩余房卡',formatter:
+                        function (value) {
+                            return value?value:0;
+                        }
+                    },
+                    {field:'createTime',width:180,align:'center',title:'注册时间',formatter:
+                        function (value) {
+                           return value?getLocalTime(value):0;
+                        }
+                    },
+                    {field:'logoutTime',width:180,align:'center',title:'上次登陆时间',formatter:
+                        function (value) {
+                            return value?getLocalTime(value):0;
+                        }
+                    },
+                    {field:'block',width:80,align:'center',title:'操作', formatter:
+                        function(value,row){
+                            var btn = '';
+                            if(value == 1) {
+                                btn = '<input type="button" id='+row._id+' value="启用" style="background-color: #3e7b9f;color: #FFFFFF" onclick="modState(this)"/>';
+                            }else{
+                                btn = '<input type="button" id='+row._id+' value="封号" style="background-color: #CAA45B;color: #FFFFFF" onclick="modState(this)"/>';
+                            }
+                            return btn;
+                        }
+                    },
+                ]]
+            })
+        });
+        function modState(This) {
+            var uid = $.trim($(This).attr('id'));
+            var block = '';
+            if($.trim($(This).val()) == '启用') {
+                block = 0;
+            }else if($.trim($(This).val()) == '封号') {
+                block = 1;
+            }
+            $.ajax({
+                type:'post',
+                url:"{:U('Admin/Player/modBlock')}",
+                dataType:'json',
+                data:{'uid':uid,'block':block},
+                success: function (data) {
+                    setTimeout(function () {
+                        window.location.href="{:U('Admin/Player/playerList')}";
+                    },500);
+                }
+            })
+        }
+        function doSearch() {
+            var search = $.trim($("#search").val());
+//            var regs = /^\d{6}$/;
+//            var tags = regs.test(search);
+            if(search == '') {
+                $.messager.alert('温馨提示！','请输入玩家的ID或者昵称','error');
+                return false;
+            }else{
+                $('#dg').datagrid('load',{
+                    search: search,
+                });
+            }
+        }
+
+        function doCheck() {
+            var search = $.trim($("#search").val());
+            var regs = /^\d{6}$/;
+            var tags = regs.test(search);
+            if(search == '') {
+                $.messager.alert('温馨提示！','请输入玩家的ID','error');
+                return false;
+            }else{
+                if(!tags || search == '000000') {
+                    $.messager.alert('温馨提示！','请输入正确的玩家ID','error');
+                    return false;
+                }else{
+                    $.ajax({
+                        type:'get',
+                        url:"{:U('Admin/Player/getPlayerInfo')}?search="+search,
+                        dataType:'json',
+                        success: function (data) {
+                            if(data == 'isAgent') {
+                                $.messager.alert('温馨提示！','该游戏ID已经是代理了','info');
+                            }else if(data == 'noSource') {
+                                $.messager.alert('温馨提示！','网络出错，验证失败！','error');
+                            }else if(data == 'error' || data == 'noUser'){
+                                $.messager.alert('温馨提示！','抱歉，该玩家不存在','error');
+                            } else{
+                                $.messager.alert('温馨提示！','匹配成功！','info',function () {
+                                    var con =  $("#iframed").context.getElementById("refer").value = data;
+                                    $("#iframed").context.getElementById("game_id").value = search
+                                    $('#dlgEdit').dialog('open').dialog('setTitle','编辑玩家成代理');
+                                });
+                            }
+                        }
+                    })
+                }
+            }
+        }
+        
+        function saveUser() {
+            var search = $.trim($("#search").val());
+            var game_id = $.trim($("#game_id").val());
+            var login_id = $.trim($("#login_id").val());
+            var named = $.trim($("#named").val());
+            var tel = $.trim($("#tel").val());
+            var tea_name = $.trim($("#tea_name").val());
+            var city = $.trim($("#city").val());
+            var notice = $.trim($("#notice").val());
+            var refer = $.trim($("#refer").val());
+            if(game_id == '') {
+                alert('请先匹配游戏ID');
+                $("#search").focus();
+            }else{
+                if(login_id == '' || tea_name == '' || city == '' || notice == '' || named == '' || tel == '') {
+                    if(login_id == '') {
+                        $.messager.alert('温馨提示！','登录账号是必填项','error');
+                        return false;
+                    }
+                    if(named == '') {
+                        $.messager.alert('温馨提示！','姓名是必填项','error');
+                        return false;
+                    }
+                    if(tel == '') {
+                        $.messager.alert('温馨提示！','手机号是必填项','error');
+                        return false;
+                    }
+                    if(tea_name == '') {
+                        $.messager.alert('温馨提示！','茶馆名称是必填项','error');
+                        return false;
+                    }
+                    if(city == '') {
+                        $.messager.alert('温馨提示！','茶馆区域是必填项','error');
+                        return false;
+                    }
+                    if(notice == '') {
+                        $.messager.alert('温馨提示！','茶馆公告是必填项','error');
+                        return false;
+                    }
+                }else{
+                    var regs = /^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]{6,10}$/;
+                    var tag = regs.test(login_id);
+                    if(!tag) {
+                        $.messager.alert('温馨提示！','请输入合法的登录账号','error');
+//                        alert("账号格式为6-10位字母拼音+数字的组合");
+                        return false;
+                    }
+                    var sreg = /^1[3|4|5|7|8][0-9]{9}$/;
+                    var stag = sreg.test(tel);
+                    if(!stag) {
+                        $.messager.alert('温馨提示！','请输入合法的手机号码','error');
+                        return false;
+                    }
+                    $.ajax({
+                        type:'post',
+                        url:"{:U('Admin/Player/getPlayerInfo')}",
+                        dataType:'json',
+                        data:{"refer":refer,"game_id":game_id,"login_id":login_id,"tea_name":encodeURI(tea_name),"city":encodeURI(city),"notice":encodeURI(notice),"named":encodeURI(named),"tel":tel},                        success: function (data) {
+                            if(data == 'success') {
+                                $.messager.alert('温馨提示！','信息保存成功','info',setTimeout(function () {
+                                    window.location.href="{:U('Admin/Player/playerList')}";
+                                },500));
+                            }else if(data == 'lexist'){
+                                $.messager.alert('温馨提示！','该登录账号已经被占用,请重新输入','warning');
+                            }else if(data == 'texist') {
+                                $.messager.alert('温馨提示！','该电话号码已经被占用,请重新输入','warning');
+                            }else{
+                                $.messager.alert('温馨提示！','网络错误，保存失败','warning');
+                            }
+                        }
+                    })
+                }
+            }
+        }
+        function getTime(obj) {
+            var curr_time=new Date();
+            var strDate=curr_time.getFullYear()+"-";
+            strDate +=curr_time.getMonth()+1+"-";
+            strDate +=curr_time.getDate()+"-";
+            strDate +=" "+curr_time.getHours()+":";
+            strDate +=curr_time.getMinutes()+":";
+            $(obj).val(strDate);
+        }
+        function getOldTime(obj) {
+            var time = Date.parse(new Date())/1000-2592000;
+            $(obj).val(getLocalTime(time));
+        }
+        
+        function playerExport(This) {
+            var start_time = $("#start_time").datebox('getValue');
+            var end_time = $("#end_time").datebox('getValue');
+            if(start_time == '' || end_time == '') {
+                if(start_time == '') {
+                    $.messager.alert('温馨提示！','请输入开始时间!','error');
+                    return false;
+                }
+                if(end_time == '') {
+                    $.messager.alert('温馨提示！','请输入结束时间!','error');
+                    return false;
+                }
+            }else{
+                if (parseInt(new Date(start_time).getTime()) > parseInt(new Date(end_time).getTime())) {
+                    $.messager.alert('温馨提示！', '请输入正确的时间段!', 'error', setTimeout(function () {
+                        window.location.href = "{:U('Admin/Player/playerList')}"
+                    }, 1000));
+                }else{
+                    start_time = new Date(start_time).getTime()/1000;
+                    end_time = new Date(end_time).getTime()/1000;
+                    $(This).attr('href',"{:U('Admin/Player/playerListExport')}?start_time="+start_time+"&end_time="+end_time);
+                }
+            }
+        }
+    </script>
+</body>
+</html>

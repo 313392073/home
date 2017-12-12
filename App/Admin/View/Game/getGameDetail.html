@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/Common/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/Common/easyui/css/admin.css">
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/Common/easyui/themes/icon.css">
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/jquery.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/easyloader.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/common.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/extends.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Admin/js/time.js"></script>
+    <style type="text/css">
+        p{
+            margin: 0 ;
+            padding: 0;
+        }
+        .box{
+            width: 800px;
+            height: 55px;
+            padding:10px 20px;
+            border: 1px solid #ccc;
+            border-radius: 12px;
+            box-shadow: 2px 2px 5px #ddd;
+            font-size: 18px;
+            overflow: hidden;
+        }
+        .box>p{
+            background-color: #3e7b9f;
+            border-radius: 12px;
+            padding: 20px;
+            float: left;
+            width: 44%;
+        }
+        .box>p>span{
+            color: #FFFFFF;
+        }
+        .list{
+            margin-top: 10px;
+            width: 800px;
+            border: 1px solid #ccc;
+            border-radius: 12px;
+            box-shadow: 2px 2px 5px #ddd;
+            padding: 0 20px 20px;
+        }
+        .listbox{
+            margin: 0 auto;
+            overflow: hidden;
+        }
+        .stat{
+            overflow: hidden;
+        }
+        .stat>p{
+            float: left;
+            width: 14%;
+            border-bottom:1px solid #CCCCCC;
+            padding: 5px 0;
+            text-align: center;
+            border-right: 1px solid #CCCCCC;
+        }
+        .ltop{
+            border-top: 1px solid #CCCCCC;
+        }
+        .lfitst{
+            border-left: 1px solid #CCCCCC;
+        }
+        .lright{
+            border-right: 1px solid #CCCCCC;
+        }
+    </style>
+</head>
+<body>
+    <p style="margin-bottom: 10px"><a href="{:U('Admin/Game/gameRecord')}" class="easyui-linkbutton" >返回</a></p>
+    <div class="box">
+        <p >房间号：<span >{$data['room_id']}</span></p>
+        <p style="background-color: #caa45b;margin-left: 10px">结束时间：<span> {$data.add_time|date='Y-m-d H:i:s',###}</span></p>
+    </div>
+    <div class="list">
+        <h3 style="text-align: center">参与玩家</h3>
+        <div class="listbox">
+            <div class="stat">
+                <p class="lfitst ltop">UID</p>
+                <p class="ltop">{$arr['players']['1']['uid']}</p>
+                <p class="ltop">{$arr['players']['2']['uid']}</p>
+                <present name="arr['players']['3']['uid']">
+                    <p class="ltop">{$arr['players']['3']['uid']}</p>
+                </present>
+                <present name="arr['players']['4']['uid']">
+                    <p class="ltop">{$arr['players']['4']['uid']}</p>
+                </present>
+                <present name="arr['players']['5']['uid']">
+                    <p class="ltop">{$arr['players']['5']['uid']}</p>
+                </present>
+                <present name="arr['players']['6']['uid']">
+                    <p class="lright ltop">{$arr['players']['5']['uid']}</p>
+                </present>
+            </div>
+            <div class="stat">
+               <p class="lfitst">姓名</p>
+               <p>{$arr['players']['1']['name']}</p>
+               <p>{$arr['players']['2']['name']}</p>
+                <present name="arr['players']['3']['name']">
+                    <p>{$arr['players']['3']['name']}</p>
+                </present>
+                <present name="arr['players']['4']['name']">
+                    <p>{$arr['players']['4']['name']}</p>
+                </present>
+                <present name="arr['players']['5']['name']">
+                    <p>{$arr['players']['5']['name']}</p>
+                </present>
+                <present name="arr['players']['6']['name']">
+                    <p class="lright">{$arr['players']['6']['name']}</p>
+                </present>
+            </div>
+            <div class="stat">
+               <p class="lfitst">得分</p>
+               <p>{$arr['players']['1']['score']}</p>
+               <p>{$arr['players']['2']['score']}</p>
+                <present name="arr['players']['3']['score']">
+                    <p>{$arr['players']['3']['score']}</p>
+                </present>
+                <present name="arr['players']['4']['score']">
+                    <p>{$arr['players']['4']['score']}</p>
+                </present>
+                <present name="arr['players']['5']['score']">
+                    <p>{$arr['players']['5']['score']}</p>
+                </present>
+                <present name="arr['players']['6']['score']">
+                    <p class="lright">{$arr['players']['6']['score']}</p>
+                </present>
+            </div>
+            <div>
+                <foreach name="arr['stat']" item="v" key="k">
+                    <div class="stat">
+                        <p class="lfitst">第{$k+1}场</p>
+                        <p>{$v['1']}</p>
+                        <p>{$v['2']}</p>
+                        <present  name="v['3']">
+                            <p>{$v['3']}</p>
+                        </present>
+                        <present name="v['4']">
+                            <p>{$v['4']}</p>
+                        </present>
+                        <present name="v['5']">
+                            <p>{$v['5']}</p>
+                        </present>
+                        <present name="v['6']">
+                            <p class="lright">{$v['6']}</p>
+                        </present>
+                    </div>
+                </foreach>
+            </div>
+       </div>
+    </div>
+</body>
+</html>

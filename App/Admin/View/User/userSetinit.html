@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/Common/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/Common/easyui/css/admin.css">
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/Common/easyui/themes/icon.css">
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/jquery.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/easyloader.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/common.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/extends.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Admin/js/time.js"></script>
+</head>
+<body>
+    <div class="easyui-panel" title="馆主下级配额设置" style="width:400px;">
+        <div style="padding:10px 60px 20px 60px">
+            <form id="ff" method="post">
+                <table cellpadding="5">
+                    <tr>
+                        <td>初级代理:</td>
+                        <td><input class="easyui-textbox" type="number" id="sub1" value="{$sub1}" name="sub1"></td>
+                    </tr>
+                    <tr>
+                        <td>中级代理:</td>
+                        <td><input class="easyui-textbox" type="number" value="{$sub2}" id="sub2" name="sub12" ></td>
+                    </tr>
+                    <tr>
+                        <td>高级代理:</td>
+                        <td><input class="easyui-textbox" type="number" name="sub3" id="sub3" value="{$sub3}"></td>
+                    </tr>
+                    <tr>
+                        <td>钻石代理:</td>
+                        <td><input class="easyui-textbox" type="number" name="sub4" id="sub4" value="{$sub4}"></td>
+                    </tr>
+                </table>
+            </form>
+            <div style="text-align:center;padding:5px">
+                <a href="javascript:void(0)" class="easyui-linkbutton" id="submitBtn" style="width: 100px;">提交</a>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $("#submitBtn").on("click", function () {
+            var sub1 = $.trim($("#sub1").val());
+            var sub2 = $.trim($("#sub2").val());
+            var sub3 = $.trim($("#sub3").val());
+            var sub4 = $.trim($("#sub4").val());
+            if(parseInt(sub1) < 0 || parseInt(sub2) < 0 || parseInt(sub3) < 0 || parseInt(sub4) < 0) {
+                $.messager.alert("温馨提示!","馆主下级配额最少是0",'error',setTimeout(function () {
+                    window.location.href="{:U('Admin/User/userSetinit')}";
+                },500));
+                return false;
+            }else if(parseInt(sub1) > 100 || parseInt(sub2) > 100 || parseInt(sub3) > 100 || parseInt(sub4) > 100) {
+                $.messager.alert("温馨提示!","馆主下级配额不能大于100",'error',setTimeout(function () {
+                    window.location.href="{:U('Admin/User/userSetinit')}";
+                },500));
+                return false;
+            }else{
+                $.ajax({
+                    type:'post',
+                    url:"{:U('Admin/User/setUserinit')}",
+                    dataType:'json',
+                    data:{'sub1':sub1,'sub2':sub2,'sub3':sub3,'sub4':sub4},
+                    success: function (data) {
+                        if(data == 'success') {
+                            $.messager.alert('温馨提示！','设置成功!','info',setTimeout(function () {
+                                window.location.href="{:U('Admin/User/userSetinit')}"
+                            },500));
+                        }else if(data == 'error'){
+                            $.messager.alert('温馨提示！','网络出错，设置失败!','error',setTimeout(function () {
+                                window.location.href="{:U('Admin/User/userSetinit')}"
+                            },500));
+                        }else if(data == 'noaccess') {
+                            $.messager.alert('权限提示','抱歉，你没有操作此功能的权限','error')
+                        }
+                    }
+                })
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/Common/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/Common/easyui/css/admin.css">
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/Common/easyui/themes/icon.css">
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/jquery.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/easyloader.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/common.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/extends.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Admin/js/time.js"></script>
+</head>
+<body>
+    <table id="dg" class="easyui-datagrid" title="馆主提现列表" toolbar="#tb"></table>
+    <div id="tb">
+        馆主ID: <input class="easyui-textbox" id="search" style="width:160px">
+        <a href="#" class="easyui-linkbutton" iconCls="icon-search" onclick="doSearch()">查询</a>
+
+        开始时间: <input class="easyui-datetimebox" name="start_time" id="start_time" style="width:140px">
+        结束时间: <input class="easyui-datetimebox" name="end_time" id="end_time" style="width:140px">
+        <a href="#" class="easyui-linkbutton" iconCls="icon-search" onclick="tdoSearch()">查询</a>
+        <a href="{:U('Admin/User/getWithdrawExport')}" class="easyui-linkbutton"  plain="true" >数据导出</a>
+    </div>
+    <script type="text/javascript">
+        $(function () {
+            $("#dg").datagrid({
+                loadMsg : '数据加载中……',
+                url:"{:U('Admin/User/userWithdrawList')}",
+                pagination:true,
+                singleSelect:true,
+                pageSize: 25, //页大小
+                pageList: [25,50,75,100],
+                pagePosition:'bottom',
+                fit:true,
+                fitColumn:true,
+                striped: true,
+                idField:'ID',
+                columns:[[
+                    {field:'ID',hidden:true},
+                    {field:'user_id',width:100,align:'center',title:'馆主ID'},
+                    {field:'login_id',width:100,align:'center',title:'馆主登录'},
+                    {field:'name',width:100,align:'center',title:'馆主姓名'},
+                    {field:'tel',width:100,align:'center',title:'电话号码'},
+                    {field:'order_id',width:200,align:'center',title:'订单号'},
+                    {field:'number',width:120,align:'center',title:'金额'} ,
+                    {field:'mod_time',width:180,align:'center',title:'处理时间',formatter:
+                        function (value) {
+                            value = getLocalTime(value);
+                            return value;
+                        }
+                    },
+                    {field:'delete_tag',width:120,align:'center',title:'状态',formatter:
+                        function (value) {
+                            var btn = '';
+                            if(value == 1) {
+                                btn = '<input type="button" value="失败" disabled style="background-color: #3e7b9f;color: #FFFFFF" />';
+                            }else{
+                                btn = '<input type="button" value="成功" disabled style="background-color: #CAA45B;color: #FFFFFF" />';
+                            }
+                            return btn;
+                        }
+                    }
+                ]]
+            })
+        });
+        function doSearch() {
+            $('#dg').datagrid('load',{
+                search: $('#search').val()
+            });
+        }
+        function tdoSearch() {
+            var start_time = $("#start_time").datebox('getValue');
+            var end_time = $("#end_time").datebox('getValue');
+            if(start_time == '' || end_time == '') {
+                if(start_time == '') {
+                    $.messager.alert('温馨提示！','请输入开始时间!','error');
+                    return false;
+                }
+                if(end_time == '') {
+                    $.messager.alert('温馨提示！','请输入结束时间!','error');
+                    return false;
+                }
+            }else{
+                if(start_time >= end_time) {
+                    if (parseInt(new Date(start_time).getTime()) > parseInt(new Date(end_time).getTime())) {
+                        $.messager.alert('温馨提示！', '请输入正确的时间段!', 'error', setTimeout(function () {
+                            window.location.href = "{:U('Admin/User/userWithdrawList')}"
+                        }, 1000));
+                    }
+                }
+                $('#dg').datagrid('load',{
+                    start_time: new Date(start_time).getTime()/1000,
+                    end_time: new Date(end_time).getTime()/1000
+                });
+            }
+
+        }
+    </script>
+</body>
+</html>

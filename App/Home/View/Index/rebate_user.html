@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>百亿云商务平台</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="apple-mobile-app-capable" content="yes">
+    <meta name="apple-mobile-app-status-bar-style" content="black">
+    <meta name="description" content="百亿云代理登录系统">
+    <meta name="keywords" content="百亿云代理登录系统">
+    <meta name="format-detection" content="telphone=no, email=no"/>
+    <script src="__PUBLIC__/App/js/jquery.js"></script>
+    <link rel="stylesheet" href="__PUBLIC__/App/css/common.css">
+    <link rel="stylesheet" href="__PUBLIC__/App/css/bootstrap.min.css">
+    <link rel="stylesheet" href="__PUBLIC__/App/font/css/font-awesome.min.css">
+    <link rel="stylesheet" href="__PUBLIC__/App/css/rebate_user.css">
+    <script src="__PUBLIC__/App/js/bootstrap.min.js"></script>
+    <script src="__PUBLIC__/App/js/common.js"></script>
+    <script src="__PUBLIC__/App/js/time.js"></script>
+</head>
+<body>
+    <div class="box">
+        <div class="title row">
+            <a href="{:U('Home/Index/agent')}"> <i class="fa fa-home col-xs-2"></i></a>            <p class="col-xs-8">推广费（用户）</p>
+            <!--<i class="fa fa-handshake-o" aria-hidden="true"></i>成员管理</a>-->
+            <a href="{:U('Home/Index/rebate_user')}"><i class="fa fa-refresh col-xs-2" aria-hidden="true"></i></a>
+        </div>
+        <div class="contents">
+            <div class="input_div"><input type="text" id="search" name="search"><a href="javascript:void(0)" id="sbtn"><i class="fa fa-search"></i></a></div>
+            <div style="text-align: center">当前推广费总计：<span style="color: red">{$total_replayer}</span></div>
+            <div class="content_box">
+                <notempty name="arr">
+                    <foreach name="arr" item="v">
+                        <div class="list">
+                            <div class="row"><span class="col-xs-6">游戏ID：{$v.player_id}</span> <span class="col-xs-6">推广费：{$v.amount}</span></div>
+                            <div class="row"><span class="col-xs-6">游戏昵称：{$v.name}</span><span class="col-xs-6">时间：{$v.add_time|date='Y-m-d',###}</span></div>
+                        </div>
+                    </foreach>
+                </notempty>
+                <empty  name="arr">
+                    <div class="list" style="line-height: 30px;text-align: center">暂时没有任何相关信息</div>
+                </empty>
+            </div>
+            <div id="mask">
+                <div class="mask_content">
+                    <p id="mask_info"></p>
+                    <button class="btn btn-primary" id="qure">确定</button>
+                </div>
+            </div>
+        </div>
+        <footer class="footers">
+            <ul>
+                <li><a href="{:U('Home/Index/agent')}"><i class="fa fa-handshake-o" aria-hidden="true"></i>成员管理</a></li>
+                <li><a href="{:U('Home/Index/order')}"><i class="fa fa-address-card-o" aria-hidden="true"></i>订单查询</a></li>
+                <li class="dropup sub_menus lion">
+                    <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-jpy" aria-hidden="true"></i>推广费</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="{:U('Home/Index/rebate_owner')}">推广费（馆主）</a></li>
+                        <li><a href="{:U('Home/Index/rebate_user')}" style="color: #337ab7">推广费（用户）</a></li>
+                    </ul>
+                </li>
+                <li><a href="{:U('Home/Index/agentInfo')}"><i class="fa fa-user-circle" aria-hidden="true"></i>个人信息</a></li>
+            </ul>
+        </footer>
+    </div>
+    <script type="text/javascript">
+        $("#sbtn").on("click", function () {
+            var search = $.trim($("#search").val());
+            if(search == '') {
+                notEmpty(search,'请输入想要查询的相关字段！');
+            }else{
+                $.ajax({
+                    type:"post",
+                    url:"{:U('Home/Index/rePlayer')}",
+                    dataType:"json",
+                    data:{'search':search},
+                    success: function (data) {
+                        if(data == 'error') {
+                            showMsg('暂时未查询到该订单相关信息！');
+                            $(".content_box").html('暂时没有任何订单信息');
+                        }else if(data == ''){
+                            $(".content_box").html('暂时没有任何订单信息');
+                        }else{
+                            var str = '';
+                            for(var i=0;i<data.length;i++) {
+                                str += "<div class='list'><div class='row'><span class='col-xs-6'>游戏ID："+data[i].player_id+"</span> <span class='col-xs-6'>推广费："+data[i].amount+"</span></div><div class='row'><span class='col-xs-6'>游戏昵称："+data[i].name+"</span><span class='col-xs-6'>时间："+getLocalTime(data[i].add_time)+"</span></div></div>"
+                            }
+                            $(".content_box").html(str);
+                        }
+                    }
+                })
+            }
+        })
+    </script>
+</body>
+</html>

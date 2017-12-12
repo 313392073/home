@@ -1,0 +1,199 @@
+.box {
+  height: 100%;
+  max-width: 640px;
+  margin: 0 auto;
+  font-size: 1.4rem;
+  background-color: #F4F4F4;
+}
+.box .title {
+  width: 100%;
+  height: 65px;
+  line-height: 65px;
+  background-color: #3e7b9f;
+  color: #ffffff;
+  font-size: 2.6rem;
+  margin-left: 0;
+  margin-right: 0;
+}
+.box .title p {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 0;
+  text-align: center;
+}
+.box .title a {
+  color: #FFFFFF;
+}
+.box .title a i {
+  margin-top: 20px;
+}
+.box .contents {
+  width: 100%;
+  padding-bottom: 83px;
+}
+.box .contents .content_box {
+  width: 98%;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  margin: 0 auto;
+  background-color: #ffffff;
+  padding: 5px 5px 10px;
+}
+.box .contents .content_box .list {
+  padding: 8px;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  font-size: 12px;
+  margin-bottom: 5px;
+}
+.box .contents .input_div {
+  width: 90%;
+  margin: 15px auto;
+  height: 36px;
+  color: #ffffff;
+  overflow: hidden;
+}
+.box .contents .input_div input {
+  height: 100%;
+  line-height: 100%;
+  outline: none;
+  width: 76%;
+  border: 2px solid #CAA45B;
+  padding: 0 1rem;
+  color: #CAA45B;
+  border-bottom-left-radius: 22px;
+  border-top-left-radius: 22px;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  outline: 0px ;
+  -webkit-appearance: none;
+  background-color: #ececec;
+}
+.box .contents .input_div input:active,
+.box .contents .input_div input:hover,
+.box .contents .input_div input:focus {
+  background-color: rgba(254, 192, 78, 0.9);
+  color: rgba(255, 255, 255, 0.9);
+}
+.box .contents .input_div a {
+  padding: 9px 12px;
+  border: 2px solid #CAA45B;
+  border-top-right-radius: 22px;
+  border-bottom-right-radius: 22px;
+  color: #ffffff;
+  cursor: pointer;
+  background-color: #CAA45B;
+}
+.box .contents .input_div a:hover,
+.box .contents .input_div a:focus {
+  background-color: #f3ab26 ;
+  border-color: #f3ab26;
+  color: #e59501;
+}
+.box .contents #mask {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  overflow: hidden;
+  z-index: 2000;
+  display: none;
+}
+.box .contents #mask .mask_content {
+  width: 80%;
+  margin: 40% auto 0;
+  background-color: #FFFFFF;
+  min-height: 120px;
+  border: 1px solid #dddddd;
+  border-radius: 6px;
+  box-shadow: 0 3px 9px rgba(0, 0, 0, 0.5);
+  text-align: center;
+  color: #222222;
+  position: relative;
+  padding: 10px;
+}
+.box .contents #mask .mask_content button {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  margin-left: -27px;
+}
+.box .footers {
+  padding: 10px 0;
+  max-width: 640px;
+  width: 100%;
+  border: 1px solid #dddddd;
+  background: #ffffff;
+  position: fixed;
+  z-index: 999;
+  bottom: 0;
+}
+.box .footers > ul {
+  height: 100%;
+}
+.box .footers > ul .lion {
+  color: #337ab7;
+}
+.box .footers > ul .lion a,
+.box .footers > ul .lion i {
+  color: #337ab7;
+}
+.box .footers > ul > li {
+  float: left;
+  width: 25%;
+  height: 100%;
+  line-height: 100%;
+  text-align: center;
+}
+.box .footers > ul > li.dropup ul.dropdown-menu {
+  width: 100%;
+  min-width: 100%;
+  text-align: center;
+  bottom: 66px;
+  border-bottom: none;
+}
+.box .footers > ul > li.dropup ul.dropdown-menu:before {
+  content: "";
+  display: block;
+  position: absolute;
+  bottom: -8px;
+  right: 42%;
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 8px solid #fff;
+}
+.box .footers > ul > li.dropup ul.dropdown-menu li a {
+  white-space: normal;
+  padding: 5px;
+}
+.box .footers > ul > li.dropup ul.dropdown-menu li a:link,
+.box .footers > ul > li.dropup ul.dropdown-menu li a:visited,
+.box .footers > ul > li.dropup ul.dropdown-menu li a:hover,
+.box .footers > ul > li.dropup ul.dropdown-menu li a:active {
+  text-decoration: none;
+  /*超链接无下划线*/
+}
+.box .footers > ul > li > a {
+  display: block;
+  color: #C6C6C6;
+  font-size: 1.4rem;
+  text-align: center;
+}
+.box .footers > ul > li > a:link,
+.box .footers > ul > li > a:visited,
+.box .footers > ul > li > a:hover,
+.box .footers > ul > li > a:active {
+  text-decoration: none;
+  /*超链接无下划线*/
+}
+.box .footers > ul > li > a i {
+  display: block;
+  width: 40%;
+  margin: 0 auto 5px;
+  font-size: 30px;
+  color: #C6C6C6;
+}

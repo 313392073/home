@@ -1,0 +1,74 @@
+.box {
+  height: 100%;
+  max-width: 640px;
+  margin: 0 auto;
+  font-size: 1.6rem;
+  position: relative;
+  padding: 0 15px 20px;
+}
+.box .time {
+  color: #8c8c8c;
+}
+.box .desc {
+  margin: 20px auto;
+  border: 2px solid #374aae;
+  box-shadow: 0 0 5px #374aae;
+  border-radius: 8px;
+  color: red;
+  font-weight: bold;
+  padding: 10px;
+}
+.box .pic1 {
+  width: 100%;
+  text-align: center;
+}
+.box .pic1 img {
+  width: 96%;
+  max-width: 500px;
+  margin: 10px auto 20px;
+}
+.box p {
+  line-height: 26px;
+}
+.box .bgtext {
+  text-align: center;
+}
+.box .bgtext span {
+  background-color: #fffb00;
+  color: #000000;
+  font-weight: bold;
+  font-size: 20px;
+}
+.box .line > div {
+  border-bottom: 1px solid red;
+  margin: 0 auto 3px;
+}
+.box .sec {
+  margin: 10px auto;
+}
+.box .sec h4 {
+  border-left: 5px #374aae solid;
+  text-indent: 15px;
+  font-weight: bold;
+}
+.box .sec p {
+  margin: 25px auto;
+}
+.box .sec img {
+  width: 96%;
+  max-width: 500px;
+  margin: 10px auto 20px;
+}
+.box .contact {
+  text-align: center;
+  padding-bottom: 20px;
+}
+.box .contact div {
+  text-align: center;
+  color: #7a4fd6;
+  font-weight: bold;
+}
+.box .contact h4 {
+  font-weight: bold;
+  color: red;
+}

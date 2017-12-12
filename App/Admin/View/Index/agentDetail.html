@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>百亿云商务平台</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="description" content="百亿云登录系统">
+    <meta name="keywords" content="百亿云登录系统">
+    <script src="__PUBLIC__/App/js/jquery.js"></script>
+    <link rel="stylesheet" href="__PUBLIC__/Admin/css/common.css">
+    <link rel="stylesheet" href="__PUBLIC__/Admin/css/bootstrap.min.css">
+    <link rel="stylesheet" href="__PUBLIC__/Admin/css/Font/css/font-awesome.min.css">
+    <link rel="stylesheet" href="__PUBLIC__/Admin/css/agentList.css">
+    <script src="__PUBLIC__/Admin/js/bootstrap.min.js"></script>
+    <script src="__PUBLIC__/Admin/js/index.js"></script>
+    <script src="__PUBLIC__/Admin/js/common.js"></script>
+</head>
+<body>
+    <div class="box">
+        <div style="width: 50%;margin: 10px 0">
+            <a href="javascript:history.go(-1);" class="btn btn-primary">返回</a>
+            <div class="row" style="margin-top: 10px;">
+                <div class="col-md-12 text-center">
+                    <div class="input-group">
+                        <span class="input-group-addon">茶馆名称&emsp;</span>
+                        <input class="form-control" type="text" name="tea_name" id="tea_name" disabled="disabled" value="{$tea_name}" />
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">茶馆ID&emsp;&emsp;</span>
+                        <input class="form-control" type="text" name="agent_id" id="agent_id" disabled="disabled" value="{$tea_name}" />
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">登录账号&emsp;</span>
+                        <input class="form-control" type="text" name="login_id" id="login_id" disabled="disabled" value="{$login_id}" />
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">游戏ID&emsp;&emsp;</span>
+                        <input class="form-control" type="text" name="game_id" id="game_id" disabled="disabled" value="{$game_id}"/>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">姓名&emsp;&emsp;&emsp;</span>
+                        <input class="form-control" type="text" name="named" id="named" disabled="disabled" value="{$named}" />
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">电话号码&emsp;</span>
+                        <input class="form-control" type="text" name="tel" id="tel" disabled="disabled" value="{$tel}" />
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">代理级别&emsp;</span>
+                        <input class="form-control" type="text" name="role" id="role" disabled="disabled" value="{$role}" />
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">剩余配额&emsp;</span>
+                        <input class="form-control" type="text" name="sub_num" id="sub_num" disabled="disabled" value="{$sub_num}" />
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">下级代理数</span>
+                        <input class="form-control" type="text" name="sub_agent" id="sub_agent" disabled="disabled" />
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">下级玩家数</span>
+                        <input class="form-control" type="text" name="sub_player" id="sub_player" disabled="disabled" />
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">总返利额&emsp;</span>
+                        <input class="form-control" type="text" name="total_rebate" id="total_rebate" disabled="disabled" value="{$total_rebate}" />
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">待提现额&emsp;</span>
+                        <input class="form-control" type="text" name="wait_withdraw" id="wait_withdraw" disabled="disabled" value="{$wait_withdraw}"/>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">注册时间&emsp;</span>
+                        <input class="form-control" type="text" name="create_time" id="create_time" disabled="disabled" value="{$v.create_time|date='Y-m-d',###}" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

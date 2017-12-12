@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/Common/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/Common/easyui/css/admin.css">
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/Common/easyui/themes/icon.css">
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/jquery.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/easyloader.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/common.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/extends.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Admin/js/time.js"></script>
+</head>
+<body>
+    <table id="dg" class="easyui-datagrid" title="游戏反馈列表" toolbar="#tb"></table>
+    <script type="text/javascript">
+        $(function () {
+            $("#dg").datagrid({
+                loadMsg : '数据加载中……',
+                url:"{:U('Admin/Game/gameFeedback')}",
+                pagination:true,
+                singleSelect:true,
+                pageSize: 25, //页大小
+                pageList: [25,50,75,100],
+                pagePosition:'bottom',
+                fit:true,
+                fitColumn:true,
+                striped: true,
+                idField:'id',
+                columns:[[
+                    {field:'id',hidden:true},
+                    {field:'user_id',width:100,align:'center',title:'玩家ID'},
+                    {field:'user_name',width:100,align:'center',title:'玩家昵称'},
+                    {field:'type',width:120,align:'center',title:'反馈类型'} ,
+                    {field:'content',width:200,align:'center',title:'反馈内容'},
+                    {field:'add_time',width:180,align:'center',title:'注册时间',formatter:
+                        function (value) {
+                            value = getLocalTime(value);
+                            return value;
+                        }
+                    },
+                    {field:'status',width:80,align:'center',title:'状态', formatter:
+                        function(value,row){
+                            var btn = '';
+                            var url = "{:U('Admin/Game/gameFeedbackDeatil')}?id=";
+                            if(value == 0) {
+                                btn = ' <a href="'+url+row.id+'" class="easyui-linkbutton" iconCls="icon-ok" style="border: 2px outset #CCCCCC;padding: 3px 8px;background-color: #3e7b9f;color: #FFFFFF;line-height: 20px;">处理</a>';
+                            }else{
+                                btn = '<input type="button" id='+row.agent_id+' value="已处理" style="background-color: #CAA45B;color: #FFFFFF" disabled/>';
+                            }
+                            return btn;
+                        }
+                    },
+                ]]
+            })
+        })
+    </script>
+</body>
+</html>

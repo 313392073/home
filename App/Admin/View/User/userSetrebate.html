@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/Common/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/Common/easyui/css/admin.css">
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/Common/easyui/themes/icon.css">
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/jquery.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/easyloader.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/common.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/extends.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Admin/js/time.js"></script>
+</head>
+<body>
+    <div class="easyui-panel" title="馆主返利比例设置" style="width:400px;">
+        <div style="padding:10px 60px 20px 60px">
+            <form id="ff" method="post">
+                <table cellpadding="5">
+                    <tr>
+                        <td>一级设置:</td>
+                        <td><input class="easyui-textbox" type="number" id="rebate1" value="{$rebate1}" name="rebate1"><span>%</span></td>
+                    </tr>
+                    <tr>
+                        <td>二级设置:</td>
+                        <td><input class="easyui-textbox" type="number" value="{$rebate2}" id="rebate2" name="rebate2" ><span>%</span></td>
+                    </tr>
+                    <tr>
+                        <td>三级设置:</td>
+                        <td><input class="easyui-textbox" type="number" name="rebate3" id="rebate3" value="{$rebate3}"><span>%</span></td>
+                    </tr>
+                </table>
+            </form>
+            <div style="text-align:center;padding:5px">
+                <a href="javascript:void(0)" class="easyui-linkbutton" id="submitBtn" style="width: 100px;">提交</a>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $("#submitBtn").on("click", function () {
+            var rebate1 = $.trim($("#rebate1").val());
+            var rebate2 = $.trim($("#rebate2").val());
+            var rebate3 = $.trim($("#rebate3").val());
+            if(parseInt(rebate1) < 0 || parseInt(rebate2) < 0 || parseInt(rebate3) < 0) {
+                $.messager.alert("温馨提示!","返利比例不能小于0",'error',setTimeout(function () {
+                    window.location.href="{:U('Admin/User/userSetrebate')}";
+                },500));
+                return false;
+            }else if(parseInt(rebate1) > 100 || parseInt(rebate2) > 100 || parseInt(rebate3) > 100) {
+                $.messager.alert("温馨提示!","返利比例不能大于100",'error',setTimeout(function () {
+                    window.location.href="{:U('Admin/User/userSetrebate')}";
+                },500));
+                return false;
+            }else{
+                $.ajax({
+                    type:'post',
+                    url:"{:U('Admin/User/setRebate')}",
+                    dataType:'json',
+                    data:{'rebate1':rebate1,'rebate2':rebate2,'rebate3':rebate3},
+                    success: function (data) {
+                        if(data == 'noaccess') {
+                            $.messager.alert('权限提示','抱歉，你没有操作此功能的权限','error')
+                        }else if(data == 'success') {
+                            $.messager.alert('温馨提示！','设置成功!','info',setTimeout(function () {
+                                window.location.href="{:U('Admin/User/userSetrebate')}"
+                            },500));
+                        }else if(data == 'error'){
+                            $.messager.alert('温馨提示！','网络出错，设置失败!','error',setTimeout(function () {
+                                window.location.href="{:U('Admin/User/userSetrebate')}"
+                            },500));
+                        }
+                    }
+                })
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/Common/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/Common/easyui/css/admin.css">
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/Common/easyui/themes/icon.css">
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/jquery.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/easyloader.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/common.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/extends.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Admin/js/time.js"></script>
+</head>
+<body>
+    <div style="width: 90%;overflow: hidden">
+        <div style="border: 1px solid #ccc;border-radius: 12px;box-shadow: 2px 2px 5px #ddd;padding: 20px;float: left;width: 40%;margin-right: 20px">
+            <div style="margin-bottom:20px">
+                <div>玩家ID:</div>
+                <input class="easyui-textbox" placeholder="请输入玩家ID" id="uid" style="width:100%;height: 32px">
+            </div>
+            <div style="margin-bottom:20px">
+                <div>邮件标题:</div>
+                <input class="easyui-textbox" placeholder="请输入玩家ID" id="title" style="width:100%;height: 32px">
+            </div>
+            <div style="margin-bottom:20px">
+                <div>邮件内容:</div>
+                <input class="easyui-textbox"  multiline="true" id="playerContent" placeholder="请输入邮件内容" style="width:100%;height:120px">
+            </div>
+            <div style="margin-bottom:20px">
+                <div>房卡数量附件:</div>
+                <input type="number" class="easyui-textbox" placeholder="请输入玩家ID" id="attach" style="width:100%;height: 32px">
+            </div>
+            <div>
+                <a href="#" class="easyui-linkbutton" onclick="sendPlayer()">发送</a>
+            </div>
+        </div>
+        <div style="border: 1px solid #ccc;border-radius: 12px;box-shadow: 2px 2px 5px #ddd;padding: 20px;float: left;width: 40%">
+            <p>群发邮件</p>
+            <div style="margin-bottom:20px">
+                <div>邮件标题:</div>
+                <input class="easyui-textbox" placeholder="请输入玩家ID" id="titles" style="width:100%;height: 32px">
+            </div>
+            <div style="margin-bottom:20px">
+                <div>邮件内容:</div>
+                <input class="easyui-textbox"  multiline="true" id="groupContent" placeholder="请输入邮件内容" style="width:100%;height:120px">
+            </div>
+            <div style="margin-bottom:20px">
+                <div>房卡数量附件:</div>
+                <input type="number" class="easyui-textbox" placeholder="请输入玩家ID" id="attachs" style="width:100%;height: 32px">
+            </div>
+            <div>
+                <a href="#" class="easyui-linkbutton" onclick="sendEvery()">发送</a>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        function sendPlayer() {
+            var uid = $.trim($("#uid").val());
+            var title = $.trim($("#title").val());
+            var playerContent = $.trim($("#playerContent").val());
+            var attach = $.trim($("#attach").val());
+            var reg=/^\d{6}$/;
+            var regs = /^[1-9]\d*$/;
+            if(!regs.test(attach)) {
+                $.messager.alert('温馨提示！','请输入合法的邮件正整数','error',setTimeout(function () {
+                    window.location.href="{:U('Admin/Game/gameEmail')}"
+                },500));
+            }
+            if(uid == '' || title == '' || playerContent == '') {
+                $.messager.alert('温馨提示！','请将邮件输入完整','error',setTimeout(function () {
+                    window.location.href="{:U('Admin/Game/gameEmail')}"
+                },500));
+            }else{
+                if(!reg.test(uid)) {
+                    $.messager.alert('温馨提示！','请输入合法的玩家ID','warning',setTimeout(function () {
+                        window.location.href="{:U('Admin/Game/gameEmail')}"
+                    },500));
+                }else{
+                    var data = '';
+                    if(attach == '') {
+                        data = {'uid':uid,'title':encodeURI(title),'playerContent':encodeURI(playerContent)};
+                    }else{
+                        data = {'uid':uid,'title':encodeURI(title),'playerContent':encodeURI(playerContent),'attach':attach};
+                    }
+                    $.ajax({
+                        type:'post',
+                        url:"{:U('Admin/Game/sendEmail')}",
+                        dataType:'json',
+                        data:data,
+                        success:function (data) {
+                            if(data == 'success') {
+                                $.messager.alert('温馨提示！','发送成功','info',setTimeout(function () {
+                                    window.location.href="{:U('Admin/Game/gameEmail')}"
+                                },500));
+                            }else{
+                                $.messager.alert('温馨提示！','网络出错，请重新发送','error');
+                            }
+                        }
+                    })
+                }
+            }
+        }
+        
+        function sendEvery() {
+            var groupContent = $.trim($("#groupContent").val());
+            var title = $.trim($("#titles").val());
+            var attach = $.trim($("#attachs").val());
+            var regs = /^[1-9]\d*$/;
+            if(!regs.test(attach)) {
+                $.messager.alert('温馨提示！','请输入合法的邮件正整数','error',setTimeout(function () {
+                    window.location.href="{:U('Admin/Game/gameEmail')}"
+                },500));
+            }
+            if(groupContent == '' || title == '') {
+                $.messager.alert('温馨提示！','请将邮件输入完整','error',setTimeout(function () {
+                    window.location.href="{:U('Admin/Game/gameEmail')}"
+                },500));
+            }else{
+                var data = '';
+                if(attach == '') {
+                    data = {'title':encodeURI(title),'groupContent':encodeURI(groupContent)};
+                }else{
+                    data = {'title':encodeURI(title),'groupContent':encodeURI(groupContent),'attach':attach};
+                }
+                $.ajax({
+                    type:'post',
+                    url:"{:U('Admin/Game/sendEmail')}",
+                    dataType:'json',
+                    data:data,
+                    success:function (data) {
+                        if(data == 'success') {
+                            $.messager.alert('温馨提示！','发送成功','info',setTimeout(function () {
+                                window.location.href="{:U('Admin/Game/gameEmail')}"
+                            },500));
+                        }else{
+                            $.messager.alert('温馨提示！','网络出错，请重新发送','error');
+                        }
+                    }
+                })
+            }
+        }
+    </script>
+</body>
+</html>

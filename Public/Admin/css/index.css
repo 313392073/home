@@ -1,0 +1,379 @@
+html,body{
+	height: 100%;
+	width: 100%;
+	font-size: 14px;
+}
+*{
+	margin: 0;
+	padding:0;
+}
+ul{
+	list-style: none;
+}
+body{
+	overflow-y: auto;
+	overflow-x: hidden;
+	height: 100%;
+	background-color: #f3f3f4;
+	color: #676a6c;
+	line-height: 1.42rem;
+}
+ul li{
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+a:hover{
+	cursor: pointer;
+}
+.input-group-addon:hover{
+	cursor: pointer;
+}
+#wrapper{
+	height: 100%;
+	background-color: #2f4050;
+}
+
+
+/*左边导航栏*/
+.navbar-static-side{
+	position: fixed;
+    width: 220px;
+    z-index: 999;
+    height: 100%;
+    background-color: #2f4050;
+    color: #a7b1c2;
+    left: 0;
+    float: left;
+}
+
+.side-menu>li{
+	position: relative;
+}
+
+.side-menu>li a{
+    color: #a7b1c2;
+    font-weight: 600;
+    padding: 14px 20px 14px 25px;
+    position: relative;
+}
+.side-menu>li.current{
+	border-left: 4px solid #19aa8d;
+    background: #293846;
+}
+
+.side-menu .nav-second-level{
+	display: none;
+}
+
+.side-menu>li a.current2{
+	background-color: #293846;
+	color:#fff;
+}
+.side-menu>li a:hover{
+	background-color: #293846;
+	color:#fff;
+}
+.nav>li>a:focus, .nav>li>a:hover{
+	background-color: transparent;
+}
+.side-menu>li>a i.txt{
+	float: right;
+}
+
+
+/*右边*/
+#page-wrapper{
+	min-height: auto;
+	background-color: #f3f3f4;
+    padding: 0 15px;
+    margin: 0 0 0 220px;
+    height: 100%;
+}
+
+
+@media (max-width: 767px) {
+	#page-wrapper{
+		margin: 0;
+	}
+	.navbar-static-top{
+		border-bottom: 1px solid #ddd;
+	}
+	
+	#agentUserRatio>p{
+		font-size: 12px;
+	}
+	#imgData{
+		text-align: center;
+	}
+	#imgData img{
+		display: block;
+		width: 100%!important;
+		margin: 0 auto;
+	}
+}
+
+/*显示的子菜单*/
+
+.sub-menu{
+	width: 140px;
+	position: absolute;
+	background-color: #2f4050;
+	z-index: 999;
+}
+
+/*右边顶级的导航*/
+#topnav{
+	width: 100%;
+	position: relative;
+	min-width: 340px;
+}
+#topnav>a,#topnav>form,#topnav>button,#topnav>div{
+	position: absolute;
+	top: 8px;
+}
+#topnav>a.minimalize-styl-2{
+	left: 25px;
+}
+#topnav>div.btn-group{
+	right: 15px;
+}
+
+#topnav>form{
+	left: 70px;
+}
+#topnav>form input{
+	background-color: transparent;
+	border: medium none;
+	width: 200px;
+}
+#topnav>form input:focus{
+	border-color: transparent;
+}
+#topnav>button{
+	left: 280px;
+}
+
+#topnav>div.explain{
+	left: 35%;
+	top: 25px;
+}
+
+
+/*二级导航*/
+.content-tabs{
+	border-top:solid 1px #eee;;
+	border-bottom: solid 2px #2f4050;
+    background: #fafafa;
+    position: relative;
+    height: 42px;
+    line-height: 36px;
+}
+.content-tabs>button,.content-tabs>nav.page-tabs,.content-tabs>a{
+	position: absolute;
+}
+.content-tabs>button.roll-left{
+	left: 0;
+	background-color: #fff;
+	padding: 0 10px;
+	border-bottom: none;
+	border-color: transparent;
+	border-right: solid 1px #eee;
+}
+.content-tabs>nav.page-tabs{
+	left: 38px;
+	
+}
+.content-tabs>button.roll-right{
+	right:86px;
+	padding: 0 10px;
+	background-color: #fff;
+	border-bottom: none;
+	border-color: transparent;
+	border-right: solid 1px #eee;
+	border-left: solid 1px #eee;
+	
+}
+.content-tabs>a{
+	background-color: #fff;
+	right: 30px;
+	border-bottom: none;
+	padding: 0px 5px;
+	border-right: solid 1px #eee;
+}
+.content-tabs>button:hover,.content-tabs>a:hover{
+	background-color: transparent;
+}
+.page-tabs .page-tabs-content{
+	padding: 2px 10px;
+	background-color: #2f4050;
+}
+/*右边侧栏开始*/
+.right-sidebar{
+	color: #676a6c;
+	
+}
+
+.side-menu a{
+	cursor: pointer;
+}
+#signupForm input.btn-block{
+	color: #333;
+	background-color: #337ab7;
+	font-size: 20px;
+}
+#signupForm label{
+	color: #d9534f;
+	font-size: 12px;
+}
+.regpage form div.form-group>div{
+	margin-bottom: 12px;
+}
+.regpage form label{
+	color: #d9534f;
+	font-size: 12px;
+}
+
+/*修改密码 */
+.list-unstyled li{
+	margin-top: 10px;
+}
+
+/*代理列表的操作*/
+#agentUserList table td.handel a.stop{
+	display: none;
+} 
+
+#agentUserRatio>p strong{
+	margin-right: 10px;
+}
+
+#agentUserRatio .form-inline .form-group{
+	margin-bottom: 8px;
+}
+
+#myStat>div>p{
+	padding: 8px;
+}
+.bs-bg-classes p {
+    padding: 16px;
+}
+
+
+/*分页样式*/
+.pagination>li>a, .pagination>li>span{
+	padding: 5px 10px;
+}
+.error{
+	color: #d9534f;
+	font-size: 12px;
+}
+#sub_tips{
+	display: none;
+	position: absolute;
+	width: 112px;
+	/*height: 120px;*/
+	right: 0;
+	top:177px;
+	background-color: #FFFFFF;
+	text-align: center;
+	z-index: 999;
+	border:1px solid #CCCCCC;
+	box-shadow:0 6px 12px rgba(0,0,0,0.175);
+	padding-top: 10px;
+}
+#sub_tips ul li{
+	line-height: 25px;
+}
+#sub_tips ul li:hover{
+	background-color: #f5f5f5;
+}
+#sub_tips ul li span{
+	color: #262626;
+	padding: 0 23px;
+}
+#sub_tips ul li span:hover{
+	cursor: pointer;
+}
+.ui-draggable, .ui-droppable {
+	background-position: top;
+}
+#playerPage a{
+	background-color: #fff;
+	color: #337ab7;
+	border:1px solid #ddd;
+	border-radius: 4px;
+	padding: 3px 7px;
+}
+#playerPage #page{
+	border: 1px solid #337ab7;
+}
+#playerPage a:hover{
+	background-color: #f3f3f4;
+}
+#playerPage #page{
+	background-color: #337ab7;
+	color: #fff;
+}
+#imgData img{
+	width:30%;
+	max-width: 350px;
+}
+
+#bg-models{
+	position: absolute;
+	top: 0;
+	left: 0;
+	display: none;
+	background: rgba(0,0,0,0.3);
+	width: 100%;
+	height: 100%;
+	z-index: 9999;
+	overflow: hidden;
+}
+#bg-contents{
+	position: fixed;
+	width: 280px;
+	height: auto;
+	padding: 10px 16px;
+	background-color: #fff;
+	left: 50%;
+	top: 50%;
+	min-height: 130px;
+	min-width: 240px;
+	border-radius: 4px;
+	box-shadow: 0 3px 10px #aaa;
+	z-index: 999;
+	margin-left: -140px;
+	margin-top: -60px;
+
+}
+#bg-contents .title_dialog{
+	font-size: 20px;
+	line-height: 30px;
+	color: #337ab7;
+	border-bottom: 1px dashed #337ab7;
+}
+#bg-contents .discription_dialog{
+	padding: 16px 0 14px 0;
+}
+#bg-contents .glyphicon-remove{
+	position: absolute;
+	top: 8px;
+	right: 16px;
+	font-size: 18px;
+	cursor: pointer;
+	color: #4D96DF
+}
+
+#bg-contents .footer_dialog{
+	position: relative;
+	text-align: right;
+	bottom:0px;
+	left: 0px;
+}
+.table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th{
+	vertical-align:middle;
+	padding: 4px 10px;
+	text-align: center;
+}

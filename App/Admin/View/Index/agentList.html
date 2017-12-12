@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>百亿云商务平台</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="description" content="百亿云登录系统">
+    <meta name="keywords" content="百亿云登录系统">
+    <script src="__PUBLIC__/App/js/jquery.js"></script>
+    <link rel="stylesheet" href="__PUBLIC__/Admin/css/common.css">
+    <link rel="stylesheet" href="__PUBLIC__/Admin/css/bootstrap.min.css">
+    <link rel="stylesheet" href="__PUBLIC__/Admin/css/Font/css/font-awesome.min.css">
+    <link rel="stylesheet" href="__PUBLIC__/Admin/css/pages.css">
+    <link rel="stylesheet" href="__PUBLIC__/Admin/css/agentList.css">
+    <script src="__PUBLIC__/Admin/js/bootstrap.min.js"></script>
+    <script src="__PUBLIC__/Admin/js/index.js"></script>
+    <script src="__PUBLIC__/Admin/js/pages.js"></script>
+    <script src="__PUBLIC__/Admin/js/time.js"></script>
+    <script src="__PUBLIC__/Admin/js/common.js"></script>
+</head>
+<body>
+    <div class="box">
+        <div id="tab1">
+            <section class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>茶馆名称</th>
+                            <th>茶馆ID</th>
+                            <th>游戏ID</th>
+                            <th>登录账号</th>
+                            <th>姓名</th>
+                            <th>代理等级</th>
+                            <th>茶楼区域</th>
+                            <th>剩余配额</th>
+                            <th>总返利额</th>
+                            <th>待提现金额</th>
+                            <th>注册时间</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="dataList"></tbody>
+                </table>
+            </section>
+            <div style="width: 100%;">
+                <ul class="page" id="page" style="width: 100%;overflow: hidden;"></ul>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $(function () {
+            $.ajax({
+                type:'get',
+                url:"{:U('Admin/Agent/getAgentList')}",
+                success: function (data) {
+                    if(data == 'error') {
+                        $("#dataList").html("暂时没查询到任何代理信息");
+                    }else{
+                        options={
+                            "id":"page",//显示页码的元素
+                            "data":data,//显示数据
+                            "maxshowpageitem":2,//最多显示的页码个数
+                            "pagelistcount":10,//每页显示数据个数
+                            "callBack":function(datas){
+                                var str = '';
+                                var role = '';
+                                var state = ''
+                                for(var i=0;i<datas.length;i++) {
+                                    if(datas[i].role == 1) {
+                                        role = '初级代理';
+                                    }else if(datas[i].role == 2) {
+                                        role = '中级代理';
+                                    }else if(datas[i].role == 3) {
+                                        role = '高级代理';
+                                    }else if(datas[i].role == 4) {
+                                        role = '钻石代理'
+                                    }
+                                    if(datas[i].state == '1') {
+                                        state = "封号";
+                                    }else if(datas[i].state == '0') {
+                                        state = "解封";
+                                    }
+                                    str += "<tr><td>"+datas[i].tea_name+"</td><td class='agent_id' data-target='"+datas[i].agent_id+"'>"+datas[i].agent_id+"</td><td>"+datas[i].game_id+"</td><td>"+datas[i].login_id+"</td><td>"+datas[i].name+"</td><td>"+role+"</td><td>"+datas[i].city+"</td><td>"+datas[i].sub_player+"</td><td>"+datas[i].total_rebate+"</td><td>"+datas[i].wait_withdraw+"</td><td>"+getLocalTime(datas[i].create_time)+"</td><td><button class='btn btn-primary' onclick='modClick(this)'>"+state+"</button></td></tr>"
+                                }
+                                $("#dataList").html(str);
+                            }
+                        }
+                        page.init(data.length,1,options);
+                    }
+                }
+                
+            });
+        });
+        function modClick(This) {
+            var state = '';
+            var value = $(This).html();
+            if(value == '封号') {
+                state = 0;
+            }else if(value == '解封') {
+                state = 1;
+            }
+            $("#bg-models").fadeIn();
+            var agent_id = $.trim($(This).closest("tr").find("td.agent_id").data("target"));
+            if(confirm("确认要修改代理的状态吗?")) {
+                $.ajax({
+                    type:"post",
+                    url:"{:U('Admin/Agent/modState')}",
+                    dataType:"json",
+                    data:{"agent_id":agent_id,"state":state},
+                    success: function (data) {
+                        if(data == 'success') {
+                            alert("修改状态成功");
+                            window.location.href="{:U('Admin/Index/agentList')}";
+                        }else{
+                            alert("修改状态失败");
+                            window.location.href = "{:U('Admin/Index/agentList')}";
+                        }
+                    }
+                });
+            }
+        }
+    </script>
+</body>
+</html>

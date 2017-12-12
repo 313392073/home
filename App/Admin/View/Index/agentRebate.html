@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>百亿云商务平台</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="description" content="百亿云登录系统">
+    <meta name="keywords" content="百亿云登录系统">
+    <script src="__PUBLIC__/App/js/jquery.js"></script>
+    <link rel="stylesheet" href="__PUBLIC__/Admin/css/common.css">
+    <link rel="stylesheet" href="__PUBLIC__/Admin/css/bootstrap.min.css">
+    <link rel="stylesheet" href="__PUBLIC__/Admin/css/Font/css/font-awesome.min.css">
+    <link rel="stylesheet" href="__PUBLIC__/Admin/css/pages.css">
+    <link rel="stylesheet" href="__PUBLIC__/Admin/css/agentList.css">
+    <script src="__PUBLIC__/Admin/js/bootstrap.min.js"></script>
+    <script src="__PUBLIC__/Admin/js/index.js"></script>
+    <script src="__PUBLIC__/Admin/js/pages.js"></script>
+    <script src="__PUBLIC__/Admin/js/time.js"></script>
+    <script src="__PUBLIC__/Admin/js/common.js"></script>
+</head>
+<body>
+    <div class="box">
+        <div class="row" style="width: 50%;">
+            <div class="form-group col-md-12">
+                <div class="input-group">
+                    <div class="input-group-addon">一级设置</div>
+                    <input type="number" min="0" max="100" class="form-control" value="{$rebate1}" name="rebate1" id="rebate1">
+                    <div class="input-group-addon">%</div>
+                </div>
+            </div>
+            <div class="form-group col-md-12">
+                <div class="input-group">
+                    <div class="input-group-addon">二级设置</div>
+                    <input type="number" min="0" max="100" class="form-control" value="{$rebate2}" name="rebate2" id="rebate2">
+                    <div class="input-group-addon">%</div>
+                </div>
+            </div>
+            <div class="form-group col-md-12">
+                <div class="input-group">
+                    <div class="input-group-addon">三级设置</div>
+                    <input type="number" min="0" max="100" class="form-control" value="{$rebate3}" name="rebate3" id="rebate3">
+                    <div class="input-group-addon">%</div>
+                </div>
+            </div>
+            <div class="col-xs-6"> <button type="submit" id="submit" class="btn btn-primary">设置</button></div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $("#submit").on("click", function () {
+            var rebate1 = $.trim($("#rebate1").val());
+            var rebate2 = $.trim($("#rebate2").val());
+            var rebate3 = $.trim($("#rebate3").val());
+            if(parseInt(rebate1) < 0 || parseInt(rebate2) < 0 || parseInt(rebate3) < 0) {
+                alert("代理比例不能小于0");
+                $(".form-control").val('');
+                return false;
+            }else if(parseInt(rebate1) > 100 || parseInt(rebate2) > 100 || parseInt(rebate3) > 100) {
+                alert("代理比例不能大于100");
+                $(".form-control").val('');
+                return false;
+            }else{
+                $.ajax({
+                    type:'post',
+                    url:"{:U('Admin/Agent/setRebate')}",
+                    dataType:'json',
+                    data:{'rebate1':rebate1,'rebate2':rebate2,'rebate3':rebate3},
+                    success: function (data) {
+                        if(data == 'success') {
+                            alert('设置成功');
+                            window.location.href="{:U('Admin/Index/agentRebate')}";
+                        }else if(data == 'error'){
+                            alert('设置失败');
+                            window.location.href="{:U('Admin/Index/agentRebate')}";
+                        }
+                    }
+                })
+            }
+        });
+
+    </script>
+</body>
+</html>

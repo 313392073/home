@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/Common/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/Common/easyui/css/admin.css">
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/Common/easyui/themes/icon.css">
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/jquery.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/easyloader.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/common.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/extends.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Admin/js/time.js"></script>
+</head>
+<body>
+<table id="dg" class="easyui-datagrid" title="兑换列表" toolbar="#tb"></table>
+<div id="tb">
+    玩家ID或昵称: <input class="easyui-textbox" id="search" style="width:160px">
+    <a href="#" class="easyui-linkbutton" iconCls="icon-search" onclick="doSearch()">查询</a>
+</div>
+<script type="text/javascript">
+    $(function () {
+        $("#dg").datagrid({
+            loadMsg : '数据加载中……',
+            url:"{:U('Admin/Game/gameExchangeList')}",
+            pagination:true,
+            singleSelect:true,
+            pageSize: 25, //页大小
+            pageList: [25,50,75,100],
+            pagePosition:'bottom',
+            fit:true,
+            fitColumn:true,
+            striped: true,
+            idField:'id',
+            columns:[[
+                {field:'id',hidden:true},
+                {field:'type',width:100,align:'center',title:'类型',formatter:
+                    function (value) {
+                        if(value == 1) {
+                            return '话费兑换';
+                        }
+                    }
+                },
+                {field:'user_id',width:100,align:'center',title:'玩家ID'},
+                {field:'user_name',width:100,align:'center',title:'昵称'},
+                {field:'item_id',width:100,align:'center',title:'道具编号'},
+                {field:'item_num',width:200,align:'center',title:'道具数量'},
+                {field:'extra',width:120,align:'center',title:'附加信息'} ,
+                {field:'desc',width:120,align:'center',title:'描述'} ,
+                {field:'mod_time',width:180,align:'center',title:'审核时间',formatter:
+                    function (value) {
+                        if(value = 0) {
+                           return value = 0
+                        }else{
+                            return  value = getLocalTime(value);
+                        }
+                    }
+                }
+            ]]
+        })
+    });
+    function doSearch() {
+        var search = $.trim($("#search").val());
+        $("#dg").datagrid('load',{
+            search:search
+        })
+    }
+</script>
+</body>
+</html>

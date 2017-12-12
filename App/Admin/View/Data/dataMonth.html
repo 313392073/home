@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/Common/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/Common/easyui/css/admin.css">
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/Common/easyui/themes/icon.css">
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/jquery.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/easyloader.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/common.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/extends.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Admin/js/time.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Admin/js/echarts.min.js"></script>
+</head>
+<body>
+    <p> <a href="{:U('Admin/Data/dataOnlineBuy')}" class="easyui-linkbutton">返回</a></p>
+    <p style="background-color: #CE3E3E;padding: 20px;border-radius: 12px;width: 50%;color: #FFFFFF;">当月充值总额：<span id="total"></span></p>
+    <div style="padding: 15px 0;">
+        <span>查看当月每天充值详情，请选择：</span>
+        <input type="text" class="easyui-datebox" id="attYearMonth">
+        <a href="#" class="easyui-linkbutton" iconCls="icon-search" onclick="doSearch()">查询</a>
+    </div>
+    <div id="main" style="height: 400px;width: 800px"></div>
+    <script type="text/javascript">
+      $(function () {
+          getTime($("#attYearMonth"));
+          $('#attYearMonth').datebox({
+              //显示日趋选择对象后再触发弹出月份层的事件，初始化时没有生成月份层
+              onShowPanel: function () {
+                  //触发click事件弹出月份层
+                  span.trigger('click');
+                  if (!tds)
+                  //延时触发获取月份对象，因为上面的事件触发和对象生成有时间间隔
+                      setTimeout(function() {
+                          tds = p.find('div.calendar-menu-month-inner td');
+                          tds.click(function(e) {
+                              //禁止冒泡执行easyui给月份绑定的事件
+                              e.stopPropagation();
+                              //得到年份
+                              var year = /\d{4}/.exec(span.html())[0] ,
+                                  //月份
+                                  //之前是这样的month = parseInt($(this).attr('abbr'), 10) + 1;
+                                  month = parseInt($(this).attr('abbr'), 10);
+
+                              //隐藏日期对象
+                              $('#attYearMonth').datebox('hidePanel')
+                              //设置日期的值
+                                  .datebox('setValue', year + '-' + month);
+                          });
+                      }, 0);
+              },
+              //配置parser，返回选择的日期
+              parser: function (s) {
+                  if (!s) return new Date();
+                  var arr = s.split('-');
+                  return new Date(parseInt(arr[0], 10), parseInt(arr[1], 10) - 1, 1);
+              },
+              //配置formatter，只返回年月 之前是这样的d.getFullYear() + '-' +(d.getMonth());
+              formatter: function (d) {
+                  var currentMonth = (d.getMonth()+1);
+                  var currentMonthStr = currentMonth < 10 ? ('0' + currentMonth) : (currentMonth + '');
+                  return d.getFullYear() + '-' + currentMonthStr;
+              }
+          });
+
+          //日期选择对象
+          var p = $('#attYearMonth').datebox('panel'),
+              //日期选择对象中月份
+              tds = false,
+              //显示月份层的触发控件
+              span = p.find('span.calendar-text');
+          var curr_time = new Date();
+
+          //设置前当月
+          $("#attYearMonth").datebox("setValue", myformatter(curr_time));
+      })
+      //格式化日期
+      function myformatter(date) {
+          //获取年份
+          var y = date.getFullYear();
+          //获取月份
+          var m = date.getMonth() + 1;
+          return y + '-' + m;
+      }
+    </script>
+
+
+    <script type="text/javascript">
+        $(function () {
+            var timed = getLocalTimes();
+            $.ajax({
+                type:'post',
+                url:"{:U('Admin/Data/dataMonth')}",
+                dataType:'json',
+                data:{'timed':timed},
+                success:function (res) {
+                    $("#total").html(res.total);
+                    var result = Object.keys(res['data']);
+                    result = result.sort();
+                    var arr = [];
+                    result.forEach(function (k) {
+                        arr.push(res['data'][k]);
+                    });
+                    getData(result,arr);
+                }
+            });
+        });
+
+        function doSearch() {
+            var timed = $("#attYearMonth").datebox('getValue');
+            $.ajax({
+                type:'post',
+                url:"{:U('Admin/Data/dataMonth')}",
+                dataType:'json',
+                data:{'timed':timed},
+                success: function (res) {
+                    $("#total").html(res.total);
+                    var result = Object.keys(res['data']);
+                    result = result.sort();
+                    var arr = [];
+                    result.forEach(function (k) {
+                        arr.push(res['data'][k]);
+                    });
+                    getData(result,arr);
+                }
+            })
+        }
+        function getData(xobj,yobj) {
+            var myChart = echarts.init(document.getElementById('main'));
+            var option = {
+                title: {
+                    text: '当月每天充值详情',
+                    left:'center',
+                },
+                tooltip: {
+                    show: true
+                },
+                legend: {
+                    data:['充值数量']
+                },
+                xAxis : [
+                    {
+                        type : 'category',
+                        boundaryGap:true,
+                        alignWithLabel:'auto',
+                        name:'号数(天)',
+                        data : xobj
+                    }
+                ],
+                yAxis : [
+                    {
+                        type : 'value',
+                        name:'充值额(元)'
+                    }
+                ],
+                series : [
+                    {
+                        "name":"最高充值额",
+                        "type":"bar",
+
+                        "data":yobj
+                    }
+                ]
+            };
+            // 为echarts对象加载数据
+            myChart.setOption(option);
+        }
+        function getTime(obj) {
+            var curr_time=new Date();
+            var strDate=curr_time.getFullYear()+"-";
+            strDate +=curr_time.getMonth()+1+"-";
+            $(obj).val(strDate);
+        }
+
+        function getLocalTimes() {
+            var curr_time=new Date();
+            var strDate=curr_time.getFullYear()+"-";
+            strDate +=curr_time.getMonth()+1;
+            return strDate;
+        }
+    </script>
+</body>
+</html>

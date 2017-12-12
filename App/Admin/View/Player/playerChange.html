@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/Common/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/Common/easyui/css/admin.css">
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/Common/easyui/themes/icon.css">
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/jquery.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/easyloader.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/common.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/extends.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Admin/js/time.js"></script>
+</head>
+<body>
+    <table id="dg" class="easyui-datagrid" title="资源增减设置" toolbar="#tb" fit="true" fitColumn="true"></table>
+    <div id="tb">
+        玩家ID: <input class="easyui-textbox" id="search" style="width:120px">
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" onclick="doSearch()">基本信息</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="editUser()">资源编辑</a>
+    </div>
+    <div id="dlgEdit" class="easyui-dialog" style="padding:10px 20px;width:400px;"
+         closed="true" buttons="#dlgEdit-buttons" modal="true">
+        <div><strong>说明:</strong> &emsp;<span style="font-size: 20px;color: red">+</span>表示增加&emsp;<span style="color: red;font-size: 24px;">-</span>表示扣减</div>
+        <form id="fmEdit" method="post" novalidate>
+            <div class="easyui-panel" title="增减资源" style="padding:5px;">
+                <div class="fitem">
+                    <label>游戏ID:</label>
+                    <input type="hidden" name="card" id="card">
+                    <input name="uid" id="uid" class="easyui-textbox" disabled data-options="height:30">
+                </div>
+                <div class="fitem">
+                    <label>编辑房卡:</label>
+                    <input name="cards" id="cards" type="text" class="easyui-textbox" data-options="height:30">
+                </div>
+            </div>
+        </form>
+        <div id="dlgEdit-buttons">
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" onclick="editSource()" style="width:90px">保存</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlgEdit').dialog('close')" style="width:90px">取消</a>
+        </div>
+    </div>
+    <script type="text/javascript">
+        function doSearch() {
+            var search = $.trim($("#search").val());
+            var regs = /^\d{6}$/;
+            var tags = regs.test(search);
+            if(!tags) {
+                $.messager.alert('温馨提示！','请输入合法的玩家ID','error');
+                return false;
+            }else {
+                $("#dg").datagrid({
+                    loadMsg : '数据加载中……',
+                    url:"{:U('Admin/Player/playerChange')}?search="+search,
+                    pagination:true,
+                    singleSelect:true,
+                    pageSize: 25, //页大小
+                    pageList: [25,50,75,100],
+                    pagePosition:'bottom',
+                    striped: true,
+                    idField:'uid',
+                    columns:[[
+                        {field:'uid',width:100,align:'center',title:'游戏ID'},
+                        {field:'name',width:100,align:'center',title:'微信昵称'},
+                        {field:'card',width:120,align:'center',title:'剩余房卡',formatter:
+                            function (value) {
+                                return value?value:0;
+                            }
+                        },
+                        {field:'createTime',width:180,align:'center',title:'注册时间',formatter:
+                            function (value) {
+                                return value?getLocalTime(value):0;
+                            }
+                        },
+                        {field:'logoutTime',width:180,align:'center',title:'上次登陆时间',formatter:
+                            function (value) {
+                                return value?getLocalTime(value):0;
+                            }
+                        }
+                    ]]
+                })
+            }
+        }
+
+        function editUser(){
+            var rows = $('#dg').datagrid('getData').total;
+            if(rows == 0) {
+                $.messager.alert('温馨提示！','请选中要编辑的行','error');
+                return false;
+            } else {
+                var row = $('#dg').datagrid('getSelected');
+                if (row){
+                    $('#dlgEdit').dialog('open').dialog('setTitle','增减资源');
+                    $('#fmEdit').form('load',row);
+                }else{
+                    $.messager.alert('错误提示','请先选中要编辑的条目','error');
+                    return false;
+                }
+            }
+        }
+        
+        function editSource() {
+            var cards = $.trim($("#cards").val());
+            var uid = $.trim($("#uid").val());
+            var card = $.trim($("#card").val());
+            if(cards*1<0 && (Math.abs(cards) > Math.abs(card))) {
+                $.messager.alert('温馨提示','剩余房卡不足','error');
+                return false;
+            }
+            $.ajax({
+                type:'post',
+                url:"{:U('Admin/Player/setPlayerSource')}",
+                dataType:'json',
+                data:{'uid':uid,'cards':cards},
+                success: function (data) {
+                    if(data == 'error') {
+                        $.messager.alert('温馨提示','网络错误，资源修改失败！','error');
+                    }else if(data == 'success') {
+                        $.messager.alert('温馨提示','资源修改成功！','info',setTimeout(function () {
+                            window.location.href = "{:U('Admin/Player/playerChange')}";
+                        },500));
+                    }
+                }
+            })
+        }
+    </script>
+</body>
+</html>

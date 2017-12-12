@@ -1,0 +1,308 @@
+/*
+ * 
+ * 重置样式，此文件可以新增常用的样式，但是不能改动已有的--jc
+ * 
+ * 
+ * */
+*{
+	margin:0px;
+	padding:0px;
+	font-family: 微软雅黑;
+}
+html {
+  font-size: 10px;
+  color: #202020;
+}
+html,body{
+	width: 100%;
+	height: 100%;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	font-size: 100%;
+}
+
+address,
+cite,
+dfn,
+em,
+var {
+	font-style: normal;
+}
+
+/* 将斜体扶正 */
+
+code,
+kbd,
+pre,
+samp {
+	font-family: courier new, courier, monospace;
+}
+
+
+/* 统一等宽字体 */
+
+small {
+	font-size: 1.2rem;
+}
+
+
+/* 小于 1.2rem的中文很难阅读，让 small 正常化 */
+
+ul,
+ol {
+	list-style: none;
+}
+
+a {
+	text-decoration: none;
+}
+a:hover {
+	text-decoration: none;
+}
+a:link{
+	text-decoration: none;
+}
+a:active{
+	text-decoration: none;
+}
+a:visited{
+	text-decoration: none;
+}
+
+img {
+	vertical-align: middle;
+}
+
+legend {
+	color: #000;
+}
+
+/* for ie6 */
+fieldset,
+img {
+	border: 0;
+}
+
+
+/* img 搭车：让链接里的 img 无边框 */
+
+button,
+input,
+select,
+textarea {
+	font-size: 100%;
+}
+
+
+/* 使得表单元素在 ie 下能继承字体大小 */
+
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+/*  清除浮动   */
+.fl{
+	float: left;
+}
+.fr{
+	float: right;
+}
+.clear_f{
+	overflow: hidden;
+}
+.clear_a:after{
+	content: "";
+	clear: both;
+	display: block;
+	height: 0;
+}
+
+.clear_bo{
+	clear: both;
+}
+.clear_a>div,
+.clear_a>img,
+.clear_a>li,
+.clear_a>ul,
+.clear_a>a,
+.clear_a>span,
+.clear_a>dt,
+.clear_a>dd,
+.clear_a>section,
+.clear_a>dl{
+	float: left;
+}
+/*  圆角   */
+.bor3{
+	border-radius:0.3rem;
+	-moz-border-radius:0.3rem;
+	-ms-border-radius:0.3rem;
+	-o-border-radius:0.3rem;
+	-webkit-border-radius:0.3rem;
+}
+.bor7{
+	border-radius:0.7rem;
+}
+.bor5{
+	border-radius:0.5rem;
+}
+.bor50{
+	border-radius:50%;
+}
+
+
+/*h5*/
+.fs10{font-size:1rem;}
+.fs12{font-size:1.2rem;}
+.fs14{font-size:1.4rem;}
+.fs16{font-size:1.6rem;}
+.fs18{font-size:1.8rem;}
+.fs20{font-size:2.0rem;}
+/*--因为大改动调动相反的---*/
+.fs18{font-size:16px !important;}
+/* 字体粗细  */
+.fw100{font-weight:100;}
+.fw600{font-weight:600;}
+.fwb{font-weight:bold;}
+
+/*  外边距  */
+.m0{margin:0;}
+.m10{margin:1em;}
+.m0a{margin:0 auto;}
+.m20{margin:2remx;}
+.m010{margin:0 1rem;}
+.m020{margin:0 2rem;}
+.m030{margin:0 3rem;}
+
+
+.mt5{margin-top:0.5rem;}
+.mt10{margin-top:1rem;}
+.mt15{margin-top:1.5rem;}
+.mt20{margin-top:2rem;}
+.mt25{margin-top:2.5rem;}
+.mt30{margin-top:3rem;}
+.mt60{margin-top: 6rem;}
+.mt80{margin-top: 8rem;}
+.ml5{margin-left:0.5rem;}
+.ml10{margin-left:1rem;}
+.ml15{margin-left:1.5rem;}
+.ml20{margin-left:2rem;}
+
+.mr10{margin-right:1rem;}
+.mr20{margin-right:2rem;}	
+.mr30{margin-right:3rem;}
+.mr50{margin-right:5rem;}	
+
+.mb5{margin-bottom:0.5rem;}
+.mb10{margin-bottom:1rem;}
+.mb15{margin-bottom:1rem;}
+.mb20{margin-bottom:2rem;}
+.mb30{margin-bottom:3rem !important;}
+.mb40{margin-bottom:4rem;}
+.mb50{margin-bottom:5rem;}
+.mb100{margin-bottom:10rem;}
+/*  内边距   */
+.p0{padding:0;}
+.p10{padding:1rem;}	
+.p20{padding:2rem;}
+.pt20{padding-top:2rem;}
+.p010{padding:0 1rem;}
+.p020{padding:0 2rem;}
+.p030{padding:0 3rem;}
+.pd10_20{padding:1rem 2rem;}
+.p15-0{padding:1.5rem 0;}
+.pl15{padding-left:1.5rem;}
+.pl20{padding-left:2rem;}
+.pl30{padding-left:3rem;}
+
+/*  文字溢出省略号  */
+.textell{
+	overflow:hidden;
+	text-overflow:ellipsis;
+	white-space:nowrap;
+	}
+	
+/* 文字居中   */
+.textC{
+	text-align: center;
+}
+.textL{text-align:left;}
+.textR{text-align:right;}
+
+
+/*  display  */
+.disN{display:none;}
+.disB{display:block;}
+.disl{
+	display: inline-block;
+}
+/* 下划线 */
+.line_none{
+	text-decoration: none;
+}
+.line{
+	text-decoration: underline;
+}
+/*  其余  */
+.overhidden{overflow:hidden;}
+.relative{position: relative;}
+.absolute{position: absolute;}
+.w100{
+	width:100% }
+/*主色*/
+
+.col00A699{
+	color:#00A699;
+}
+.col8D8D8D{
+	color:#8D8D8D;
+}
+.col3f{
+	color:#3F3F3F;
+}
+.col36{
+	color:#363636;
+}
+.bor00A699{
+	border:0.1rem  solid #00A699;
+}
+.borC6C6C6{
+	border:0.1rem  solid #C6C6C6 ;
+}
+.borbc6_dashed{
+	border-bottom: 0.1rem dashed #C6C6C6;
+}
+
+.borBC6C6C6{
+	border-bottom:0.1rem  solid #C6C6C6;
+}
+.borLC6C6C6{
+	border-left:0.1rem  solid #C6C6C6;
+}
+.borR00A699{
+	border-right:0.1rem  solid #00A699;
+}
+.borB00A699{
+	border-bottom:0.1rem  solid #00A699;
+}
+.bor_L_B{
+	border-left: 0.1rem  solid #C9D3D6;
+	border-bottom: 0.1rem  solid #C9D3D6;
+}
+.bor0{
+	border:none !important;
+}
+.borB0{
+	border-bottom:none;
+}
+.borR0{
+	border-right:none;
+}
+.outline{
+	outline:none;
+}

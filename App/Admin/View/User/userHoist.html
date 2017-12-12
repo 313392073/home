@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/Common/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/Common/easyui/css/admin.css">
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/Common/easyui/themes/icon.css">
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/jquery.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/easyloader.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/common.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/extends.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Admin/js/time.js"></script>
+</head>
+<body>
+<table id="dg" class="easyui-datagrid" title="待提升馆主列表" toolbar="#tb"></table>
+<script type="text/javascript">
+    $(function () {
+        $("#dg").datagrid({
+            loadMsg : '数据加载中……',
+            url:"{:U('Admin/User/userHoist')}",
+            pagination:true,
+            singleSelect:true,
+            pageSize: 25, //页大小
+            pageList: [25,50,75,100],
+            pagePosition:'bottom',
+            fit:true,
+            fitColumn:true,
+            striped: true,
+            idField:'id',
+            columns:[[
+                {field:'id',hidden:true},
+                {field:'card_id',hidden:true},
+                {field:'notice',hidden:true},
+                {field:'tel',hidden:true},
+                {field:'agent_id',width:100,align:'center',title:'茶馆ID'},
+                {field:'tea_name',width:100,align:'center',title:'茶馆名称'},
+                {field:'city',width:120,align:'center',title:'茶楼区域'} ,
+                {field:'game_id',width:100,align:'center',title:'游戏ID'}  ,
+                {field:'login_id',width:100,align:'center',title:'馆主账号'},
+                {field:'name',width:100,align:'center',title:'馆主姓名'},
+                {field:'role',width:60,align:'center',title:'等级',formatter:function (value) {
+                    if(value == 1) {
+                        value = '初级代理';
+                    }else if(value == 2) {
+                        value = '中级代理';
+                    }else if(value == 3) {
+                        value = '中级代理';
+                    }else{
+                        value = '钻石代理';
+                    }
+                    return value;
+                }},
+                {field:'sub_player',editor:'text',width:60,align:'center',title:'剩余配额'} ,
+                {field:'total_rebate',width:120,align:'center',title:'总返利额'},
+                {field:'wait_withdraw',width:120,align:'center',title:'待提现额'},
+                {field:'add_time',width:180,align:'center',title:'注册时间',formatter:
+                    function (value) {
+                        value = getLocalTime(value);
+                        return value;
+                    }
+                },
+                {field:'tag',width:80,align:'center',title:'馆主提升', formatter:
+                    function(value,row){
+                        var btn = '<input type="button" id='+row.agent_id+' value="同意" style="background-color: #3e7b9f;color: #FFFFFF" onclick="agreeHoist(this)"/>';
+                        return btn;
+                    }
+                },
+            ]]
+        })
+    });
+    //同意提升
+    function agreeHoist(This) {
+        var agent_id = $.trim($(This).attr('id'));
+        $.ajax({
+            type:'get',
+            url:"{:U('Admin/User/agreeHoist')}?agent_id="+agent_id,
+            dataType:'json',
+            success: function (data) {
+                if(data == 'error') {
+                    $.messager.alert('温馨提示！','提升失败!','warning',setTimeout(function () {
+                        window.location.href="{:U('Admin/User/userHoist')}"
+                    },500));
+                }else if(data == 'success'){
+                    $.messager.alert('温馨提示！','提升成功!','info',setTimeout(function () {
+                        window.location.href="{:U('Admin/User/userHoist')}"
+                    },500));
+                }else if(data == 'noaccess') {
+                    $.messager.alert('权限提示','抱歉，你没有操作此功能的权限','error')
+                }
+            }
+        })
+    }
+</script>
+</body>
+</html>

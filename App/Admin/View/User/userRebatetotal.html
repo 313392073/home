@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/Common/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/Common/easyui/css/admin.css">
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/Common/easyui/themes/icon.css">
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/jquery.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/easyloader.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/common.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/extends.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Admin/js/time.js"></script>
+</head>
+<body>
+    <table id="dg" class="easyui-datagrid" title="返利统计列表" toolbar="#tb"></table>
+    <script type="text/javascript">
+        $(function () {
+            $("#dg").datagrid({
+                loadMsg : '数据加载中……',
+                url:"{:U('Admin/User/userRebatetotal')}",
+                pagination:true,
+                singleSelect:true,
+                pageSize: 25, //页大小
+                pageList: [25,50,75,100],
+                pagePosition:'bottom',
+                fit:true,
+                fitColumn:true,
+                striped: true,
+                idField:'agent_id',
+                columns:[[
+                    {field:'login_id',width:100,align:'center',title:'馆主账号'},
+                    {field:'agent_id',width:100,align:'center',title:'馆主ID'},
+                    {field:'tea_name',width:100,align:'center',title:'茶馆名称'},
+                    {field:'city',width:120,align:'center',title:'茶楼区域'} ,
+                    {field:'name',width:100,align:'center',title:'馆主姓名'},
+                    {field:'role',width:100,align:'center',title:'等级',formatter:function (value) {
+                        if(value == 1) {
+                            value = '初级代理';
+                        }else if(value == 2) {
+                            value = '中级代理';
+                        }else if(value == 3) {
+                            value = '中级代理';
+                        }else{
+                            value = '钻石代理';
+                        }
+                        return value;
+                    }},
+                    {field:'trebate',width:120,align:'center',title:'30%的收益'} ,
+                    {field:'erebate',width:120,align:'center',title:'7%的收益'},
+                    {field:'frebate',width:120,align:'center',title:'3%的收益'},
+                    {field:'total',width:120,align:'center',title:'合计收益'},
+                    {field:'create_time',width:180,align:'center',title:'注册时间',formatter:
+                        function (value) {
+                            value = getLocalTime(value);
+                            return value;
+                        }
+                    },
+                ]]
+            })
+        })
+    </script>
+</body>
+</html>

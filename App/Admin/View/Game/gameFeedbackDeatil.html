@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/Common/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/Common/easyui/css/admin.css">
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/Common/easyui/themes/icon.css">
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/jquery.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/easyloader.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/common.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/extends.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Admin/js/time.js"></script>
+</head>
+<body>
+    <a href="javascript:history.back()" class="easyui-linkbutton">返回</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" onclick="saveFeedback()">保存</a>
+    <div style="margin:20px 0 10px 0;">
+    </div>
+    <div id="p" class="easyui-panel" title="更新反馈" style="width:100%;height:200px;padding:10px;">
+        <p>反馈类型：<sapn>{$arr.type}</sapn>
+            <input type="hidden" value="{$arr.id}" id="ids"></p>
+        <p>反馈内容：<span>{$arr.content}</span><p>
+        <p>反馈游戏账号：<span>{$arr.user_id}</span><p>
+        <p>反馈游戏昵称：<span>{$arr.user_name}</span><p>
+        <p>反馈时间：<span>{$arr.add_time|date='Y-m-d',###}</span><p>
+    </div>
+    <script type="text/javascript">
+        function saveFeedback() {
+            var ids = $("#ids").val();
+            $.ajax({
+                type:'get',
+                url:"{:U('Admin/Game/saveFeedback')}?ids="+ids,
+                dataType:'json',
+                success: function (data) {
+                    if(data == 'success') {
+                        $.messager.alert('温馨提示！','处理成功','info',setTimeout(function () {
+                            window.location.href="{:U('Admin/Game/gameFeedback')}"
+                        },1000));
+                    }else{
+                        $.messager.alert('温馨提示！','保存失败','error');
+                    }
+                }
+            })
+        }
+    </script>
+</body>
+</html>

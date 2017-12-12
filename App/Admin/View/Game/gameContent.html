@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/Common/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/Common/easyui/css/admin.css">
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/Common/easyui/themes/icon.css">
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/jquery.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/easyloader.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/common.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/extends.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Admin/js/time.js"></script>
+</head>
+<body>
+    <div>
+        <textarea name="gmcontent" id="gmcontent" style="display: block;width:400px;height:180px;padding: 5px;border:1px solid #95B8E7">{$gmContent}</textarea>
+        <p style="width:400px;text-align: center"><a href="javascript:void(0)" class="easyui-linkbutton" style="padding: 3px 8px;" id="sbtn">提交</a></p>
+    </div>
+    <script type="text/javascript">
+        $("#sbtn").on("click",function () {
+            var gmContent = $.trim($("#gmcontent").val());
+            console.log(gmContent);
+            if(gmContent == '') {
+                $.messager.alert('温馨提示！','请输入要设置的公告!','warning',setTimeout(function () {
+                    window.location.href="{:U('Admin/Game/gameContent')}";
+                },500))
+            }else{
+                $.ajax({
+                    type:'post',
+                    url:"{:U('Admin/Game/setGmcontent')}",
+                    dataType:'json',
+                    data:{'gmContent':gmContent},
+                    success: function (data) {
+                        if(data == 'success') {
+                            $.messager.alert('温馨提示！','设置成功!','info',setTimeout(function () {
+                                window.location.href="{:U('Admin/Game/gameContent')}";
+                            },500))
+                        }else{
+                            $.messager.alert('温馨提示！','网络错误，设置失败!','error',setTimeout(function () {
+                                window.location.href="{:U('Admin/Game/gameContent')}";
+                            },500))
+                        }
+                    }
+                })
+            }
+        })
+    </script>
+</body>
+</html>

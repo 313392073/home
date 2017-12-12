@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>密码找回</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="apple-mobile-app-capable" content="yes">
+    <meta name="apple-mobile-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telphone=no, email=no"/>
+    <script src="__PUBLIC__/App/js/jquery.js"></script>
+    <link rel="stylesheet" href="__PUBLIC__/App/css/common.css">
+    <link rel="stylesheet" href="__PUBLIC__/App/css/bootstrap.min.css">
+    <link rel="stylesheet" href="__PUBLIC__/App/font/css/font-awesome.min.css">
+    <link rel="stylesheet" href="__PUBLIC__/App/css/findPwd.css">
+    <script src="__PUBLIC__/App/js/bootstrap.min.js"></script>
+    <script src="__PUBLIC__/App/js/common.js"></script>
+</head>
+<body>
+<div class="box">
+    <h3 style="text-align: center">密码找回</h3>
+    <div id="findForm" style="width: 80%;margin: 0 auto">
+        <div class="input-groups codes">
+            <input type="text" class="form-control" placeholder="请输入登录账号" id="login_id">
+            <input type="button" value="匹配" id="getTel" />
+        </div>
+        <div class="input-groups">
+            <input type="text" class="form-control" placeholder="匹配的电话号码" id="tel" disabled>
+        </div>
+        <div class="input-groups codes">
+            <input type="text" class="form-control" placeholder="请输入验证码" id="code">
+            <input type="button" value="获取验证码" id="getCode" />
+        </div>
+        <div class="input-groups">
+            <input type="text" class="form-control" placeholder="请输入新密码" id="pwd">
+        </div>
+        <div style="text-align: center"><button class="btn btn-primary" id="qbtn">确认</button></div>
+        <div style="text-align: center;margin-top: 10px;"><a href="javascript:void(0)" id="findLoginid">忘记登录账号</a></div>
+    </div>
+    <div id="mask">
+        <div class="mask_content">
+            <p id="mask_info"></p>
+            <button class="btn btn-primary" id="qure">确定</button>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $("#getCode").on("click", function () {
+        settime(this,60);
+        var tel = $.trim($("#tel").val());
+        $.ajax({
+            type:"post",
+            url:"{:U('Home/Look/sendCode')}",
+            dataType:'json',
+            data:{'tel':tel},
+            success: function (data) {
+                if(data == 'success') {
+                    console.log(data);
+                }else{
+                    showMsg('验证码发送失败，请稍后再试！');
+                }
+            }
+        })
+    });
+    $("#getTel").on("click",function () {
+        var login_id = $.trim($("#login_id").val());
+        if(login_id == '') {
+            showMsg("登录账号不能为空");
+            return false;
+        }else{
+            $.ajax({
+                type:'get',
+                url:"{:U('Home/Look/getTel')}?login_id="+login_id,
+                dataType:'json',
+                success: function (data) {
+                    if(data == 'error') {
+                        showMsg("账号错误，不能匹配");
+                    }else{
+                        $("#tel").val(data);
+                    }
+                }
+            })
+        }
+    });
+    $("#qbtn").on("click",function () {
+        var tel = $.trim($("#tel").val());
+        var code = $.trim($("#code").val());
+        var pwd = $.trim($("#pwd").val());
+        var login_id = $.trim($("#login_id").val());
+        if(tel == '') {
+            showMsg("请先匹配登录电话号码");
+        }else{
+            if(tel == '' || code == '' || pwd == '' || login_id == '') {
+                if(login_id == '') {
+                    showMsg("登录账号不能为空");
+                    return false;
+                }
+                if(tel == '') {
+                    showMsg("电话号码不能为空");
+                    return false;
+                }
+                if(code == '') {
+                    showMsg("验证码不能为空");
+                    return false;
+                }
+                if(pwd == '') {
+                    showMsg("新密码不能为空");
+                    return false;
+                }
+                return false;
+            }else{
+                var regs = /^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]{6,10}$/;
+                var tag = regs.test(pwd);
+                if(!tag) {
+                    showMsg("密码格式为6-10位的数字+字母");
+                    return false;
+                }
+                $.ajax({
+                    type:"post",
+                    url:"{:U('Home/Look/checkCode')}",
+                    dataType:'json',
+                    data:{"tel":tel,"ensure":code,"pwd":pwd,"login_id":login_id},
+                    success: function (datas) {
+                        if(datas == 'notCode') {
+                            showMsg("验证码错误或者已过时，请重新输入！");
+                            setTimeout(function () {
+                                window.location.href = "{:U('Home/Look/findPwd')}";
+                            },5000);
+                        }else if(datas == 'repeat') {
+                            showMsg("新密码不能和原密码相同，请重新输入！");
+                            setTimeout(function () {
+                                window.location.href = "{:U('Home/Look/findPwd')}";
+                            },500);
+                        }else if(datas == 'success') {
+                            showMsg('修改密码成功！');
+                            setTimeout(function () {
+                                window.location.href = "{:U('Home/Login/login')}";
+                            },500);
+                        }else if(datas == 'error') {
+                            showMsg('网络错误，修改失败！');
+                            setTimeout(function () {
+                                window.location.href = "{:U('Home/Look/findPwd')}";
+                            },500);
+                        }
+                    }
+                })
+            }
+        }
+
+    });
+    $("#findLoginid").on("click",function () {
+        showMsg("如果忘记登录账号请联系您的上级");
+    })
+</script>
+</body>
+</html>

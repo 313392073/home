@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>百亿云商务平台</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="description" content="百亿云登录系统">
+    <meta name="keywords" content="百亿云登录系统">
+    <script src="__PUBLIC__/App/js/jquery.js"></script>
+    <link rel="stylesheet" href="__PUBLIC__/Admin/css/common.css">
+    <link rel="stylesheet" href="__PUBLIC__/Admin/css/bootstrap.min.css">
+    <link rel="stylesheet" href="__PUBLIC__/Admin/css/Font/css/font-awesome.min.css">
+    <link rel="stylesheet" href="__PUBLIC__/Admin/css/pages.css">
+    <link rel="stylesheet" href="__PUBLIC__/Admin/css/agentList.css">
+    <script src="__PUBLIC__/Admin/js/bootstrap.min.js"></script>
+    <script src="__PUBLIC__/Admin/js/index.js"></script>
+    <script src="__PUBLIC__/Admin/js/pages.js"></script>
+    <script src="__PUBLIC__/Admin/js/time.js"></script>
+    <script src="__PUBLIC__/Admin/js/common.js"></script>
+</head>
+<body>
+    <div class="box">
+        <div id="tab1">
+            <div style="width: 50%;margin: 10px 0">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="请输入代理ID" id="search">
+                    <span class="input-group-btn">
+                        <button class="btn btn-primary" style="line-height: 20px" type="button" id="cbtn">搜索</button>
+                    </span>
+                </div>
+            </div>
+            <section class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>登录账号</th>
+                        <th>茶楼ID</th>
+                        <th>茶馆名称</th>
+                        <th>茶馆公告</th>
+                        <th>游戏ID</th>
+                        <th>姓名</th>
+                        <th>茶楼区域</th>
+                        <th>电话号码</th>
+                        <th>剩余配额</th>
+                        <th>总返利额</th>
+                        <th>待提现金额</th>
+                        <th>注册时间</th>
+                        <th style='min-width: 102px'>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody id="dataList"></tbody>
+                </table>
+            </section>
+            <div style="width: 100%;">
+                <ul class="page" id="page" style="width: 100%;overflow: hidden;"></ul>
+            </div>
+        </div>
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">代理信息修改</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="input-group">
+                                    <span class="input-group-addon">代理 ID&nbsp;&nbsp;</span>
+                                    <input type="text" class="form-control" name="agent_id" id="agent_id" disabled="true">
+                                </div>
+                                <div class="input-group">
+                                    <span class="input-group-addon">茶馆名称</span>
+                                    <input type="text" class="form-control" name="tea_name" id="tea_name">
+                                </div>
+                                <div class="input-group">
+                                    <span class="input-group-addon">茶馆公告</span>
+                                    <input type="text" class="form-control" name="notice" id="notice">
+                                </div>
+                                <div class="input-group">
+                                    <span class="input-group-addon">茶馆区域</span>
+                                    <input type="text" class="form-control" name="city" id="city">
+                                </div>
+                                <div class="input-group">
+                                    <span class="input-group-addon">姓名&emsp;&emsp;</span>
+                                    <input type="text" class="form-control" name="named" id="named">
+                                </div>
+                                <div class="input-group">
+                                    <span class="input-group-addon">代理配额</span>
+                                    <input type="text" class="form-control" name="sub_player" id="sub_player">
+                                </div>
+                                <div class="input-group">
+                                    <span class="input-group-addon">手机号码</span>
+                                    <input type="text" class="form-control" name="tel" id="tel">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                            <button type="button" class="btn btn-primary" id="sbtn">保存</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $("#cbtn").on("click", function () {
+            var search = $.trim($("#search").val());
+            if(search == '') {
+                alert("请输入要查询的代理相关信息！");
+                return false;
+            }else{
+                $.ajax({
+                    type:'post',
+                    url:"{:U('Admin/Agent/InfoSearch')}",
+                    dataType:'json',
+                    data:{"search":search},
+                    success: function (data) {
+                        if(data == 'error') {
+                            alert("暂未查询任何相关信息");
+                            window.location.href="{:U('Admin/Index/agentSearch')}";
+                        }else{
+                            var str = '';
+                            for(var i=0;i<data.length;i++) {
+                                str += "<tr><td>"+data[i].login_id+"</td><td class='login_id' data-target='"+data[i].agent_id+"'>"+data[i].agent_id+"</td><td class='tea_name' data-target='"+data[i].tea_name+"'>"+data[i].tea_name+"</td><td class='notice' data-target='"+data[i].notice+"'>"+data[i].notice+"</td><td>"+data[i].game_id+"</td><td class='named' data-target='"+data[i].name+"'>"+data[i].name+"</td><td class='city' data-target='"+data[i].city+"'>"+data[i].city+"</td><td class='tel' data-target='"+data[i].tel+"'>"+data[i].tel+"</td><td class='sub_player' data-target='"+data[i].sub_player+"'>"+data[i].sub_player+"</td><td>"+data[i].total_rebate+"</td><td>"+data[i].wait_withdraw+"</td><td>"+getLocalTime(data[i].create_time)+"</td><td><button class='btn btn-primary btn-xs' onclick='lookClick(this)'>查看</button>&emsp;<button class='btn btn-info btn-xs' onclick='editClick(this)' data-toggle='modal' data-target='#myModal'>编辑</button></td></tr>"
+                            }
+                            $("#dataList").html(str);
+                        }
+                    }
+                })
+            }
+        });
+        function lookClick(This) {
+            var agent_id = $.trim($(This).closest("tr").find("td.login_id").data('target'));
+            $.ajax({
+                type:'get',
+                url:"{:U('Admin/Agent/lookDetail')}?agent_id="+agent_id,
+                dataType:'json',
+                success: function (data) {
+                    if(data == 'error') {
+                        alert("暂未查询到任何信息！");
+                    }else if(data == 'failure') {
+                        alert("获取信息失败，请刷新网页！");
+                    }else{
+                        window.location.href="{:U('Admin/Index/agentDetail')}?agent_id="+agent_id;
+                    }
+                }
+            })
+        }
+        
+        function editClick(This) {
+            var agent_id = $.trim($(This).closest("tr").find("td.login_id").data('target'));
+            var tea_name = $.trim($(This).closest("tr").find("td.tea_name").data('target'));
+            var notice = $.trim($(This).closest("tr").find("td.notice").data('target'));
+            var named = $.trim($(This).closest("tr").find("td.named").data('target'));
+            var sub_player = $.trim($(This).closest("tr").find("td.sub_player").data('target'));
+            var tel = $.trim($(This).closest("tr").find("td.tel").data('target'));
+            var city = $.trim($(This).closest("tr").find("td.city").data('target'));
+            $("#agent_id").val(agent_id);
+            $("#tea_name").val(tea_name);
+            $("#notice").val(notice);
+            $("#named").val(named);
+            $("#sub_player").val(sub_player);
+            $("#tel").val(tel);
+            $("#city").val(city);
+        }
+        $("#sbtn").on("click", function () {
+            var agent_id = $.trim($("#agent_id").val());
+            var tea_name = $.trim($("#tea_name").val());
+            var notice = $.trim($("#notice").val());
+            var named = $.trim($("#named").val());
+            var sub_player = $.trim($("#sub_player").val());
+            var tel = $.trim($("#tel").val());
+            var city = $.trim($("#city").val());
+            $.ajax({
+                type:"post",
+                url:"{:U('Admin/Agent/editInfo')}",
+                dataType:"json",
+                data:{'agent_id':agent_id,'tea_name':tea_name,'notice':notice,'named':named,'sub_player':sub_player,'tel':tel,'city':city},
+                success: function (datas) {
+                    if(datas == 'success') {
+                        alert('修改成功')
+                    }else{
+                        alert('网络出错，修改失败')
+                    }
+                }
+            });
+        })
+
+    </script>
+</body>
+</html>

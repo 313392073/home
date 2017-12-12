@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/Common/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/Common/easyui/css/admin.css">
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/Common/easyui/themes/icon.css">
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/jquery.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/easyloader.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/common.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Common/easyui/js/extends.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Admin/js/time.js"></script>
+</head>
+<body>
+    <table id="dg" class="easyui-datagrid" title="兑换审核" toolbar="#tb"></table>
+    <script type="text/javascript">
+        $(function () {
+            $("#dg").datagrid({
+                loadMsg : '数据加载中……',
+                url:"{:U('Admin/Game/gameExchange')}",
+                pagination:true,
+                singleSelect:true,
+                pageSize: 25, //页大小
+                pageList: [25,50,75,100],
+                pagePosition:'bottom',
+                fit:true,
+                fitColumn:true,
+                striped: true,
+                idField:'id',
+                columns:[[
+                    {field:'id',hidden:true},
+                    {field:'type',width:100,align:'center',title:'类型',formatter:
+                        function (value) {
+                            if(value == 1) {
+                                return '话费兑换';
+                            }
+                        }
+                    },
+                    {field:'user_id',width:100,align:'center',title:'玩家ID'},
+                    {field:'user_name',width:100,align:'center',title:'昵称'},
+                    {field:'item_id',width:100,align:'center',title:'道具编号'},
+                    {field:'item_num',width:200,align:'center',title:'道具数量'},
+                    {field:'extra',width:120,align:'center',title:'附加信息'} ,
+                    {field:'desc',width:120,align:'center',title:'描述'} ,
+                    {field:'add_time',width:180,align:'center',title:'申请时间',formatter:
+                        function (value) {
+                            value = getLocalTime(value);
+                            return value;
+                        }
+                    },
+                    {field:'status',width:120,align:'center',title:'审核',formatter:
+                        function (value,row) {
+                            return '<input type="button" data-game='+row.id+' value="通过" style="background-color: #3e7b9f;color: #FFFFFF" onclick="modState(this)"/>';
+                        }
+                    } ,
+                ]]
+            })
+        });
+        
+        function modState(This) {
+            Id = $.trim($(This).data('game'));
+            $.ajax({
+                type:'get',
+                url:"{:U('Admin/Game/modExchange')}?Id="+Id,
+                dataType:'json',
+                success:function (data) {
+                    if(data == 'error') {
+                        $.messager.alert('温馨提示！','网络出错，审核失败!','warning',setTimeout(function () {
+                            window.location.href="{:U('Admin/Game/gameExchange')}"
+                        },500));
+                    }else{
+                        $.messager.alert('温馨提示！','审核成功!','info',setTimeout(function () {
+                            window.location.href="{:U('Admin/Game/gameExchange')}"
+                        },500));
+                    }
+                }
+            })
+        }
+    </script>
+</body>
+</html>
